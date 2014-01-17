@@ -1,36 +1,30 @@
 <?php
   require_once "libs/utility.php";
-  
-  $username = $_POST["inputUserName"];
-  $password = $_POST["inputPassword"];
-
+  require_once "libs/models/user.php";
   
   
-  echo "Username: " . $username . "<br>";
-  echo "Password: " . $password . "<br>";
-  echo '$_POST: ';
-  echo var_dump($_POST) . "<br>";
-  echo '$_GET: ';
-  echo var_dump($_GET) . "<br>";
-  
-  
-  if (empty($_POST["inputUsername"]) && !empty($_POST["inputPassword"])) {
+  if (empty($_POST["username"]) && !empty($_POST["password"])) {
       showView("loginView.php", array('error' => "Please insert your username"));
   
       exit();
   } 
-  else if (!empty($_POST["inputUsername"]) && empty($_POST["inputPassword"])) {
+  else if (!empty($_POST["username"]) && empty($_POST["password"])) {
      showView("loginView.php", array('error' => "Please insert your password"));
      
      exit();
   }
-  else if (empty($_POST["inputUsername"]) && empty($_POST["inputPassword"])) {
-    showView("loginView.php", array('error' => "Username and pw"));
-   
+  else if (empty($_POST["username"]) && empty($_POST["password"])) {
+    showView("loginView.php");
     exit(); 
   }
   
+  $username = htmlspecialchars($_POST["username"]);
+  $password = htmlspecialchars($_POST["password"]);
   
-
+  $user = User::loadUser($username, $password);
   
-?>
+  if ($user == NULL) {
+      showView("loginView.php", array('error' => "Incorrect username or password"));
+  } 
+  
+  showView("loginView.php", array('error' => "Logged in as " . $user->getName() . " (add redirect to correct page!)"));

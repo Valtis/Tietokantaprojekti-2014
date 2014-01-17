@@ -16,13 +16,13 @@
             <div class="form-group">
               <label for="inputUserName" class="col-md-2 control-label">Username</label>
               <div class="col-md-10">
-                <input type="text" class="form-control" id="inputUserName1" placeholder="Username">
+                <input type="text" name="username" class="form-control" id="inputUserName1" placeholder="Username">
               </div>
             </div>
             <div class="form-group">
               <label for="inputPassword" class="col-md-2 control-label">Password</label>
               <div class="col-md-10">
-                <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+                <input type="password" name="password" class="form-control" id="inputPassword" placeholder="Password">
               </div>
             </div>
             <div class="form-group">

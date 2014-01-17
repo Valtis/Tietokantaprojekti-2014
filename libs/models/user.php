@@ -1,6 +1,5 @@
 <?php
 const PASSWORD_HASHING_ITERATIONS = 10000;
-const SALT_SIZE = 40;
 require_once "database.php";
 
 class AccessLevel {
@@ -24,9 +23,7 @@ class User {
     public function __construct() {
         $this->name = NULL;
         $this->password = NULL;
-               echo "bfcdgdfv";
         $this->salt = self::createSalt();
-               echo "asdasd";
         $this->email = NULL;
         $this->iterations = NULL;
         $this->access_level = NULL;
@@ -45,64 +42,71 @@ class User {
     }
     
     public function setPassword($pw) {
-        $this->password = hashPassword($pw, PASSWORD_HASHING_ITERATIONS);        
+        $this->password = self::hashPassword($pw, $this->salt, PASSWORD_HASHING_ITERATIONS);   
+        $this->iterations = PASSWORD_HASHING_ITERATIONS;
     }
     
+    public function getIterations() {
+        return $this->iterations;
+    }
     public function getSalt() {
         return $this->salt;        
     }
     
     public static function loadUser($name, $password) {
-        $results = self::getUserData($password);
+        $results = self::getUserData($name, $password);
         
         if ($results == NULL) {
             return NULL;
         }
         
-        $user = new User();
         return self::setUpUser($results);
-        
-        
     }
     
-    private static function getUserData($password) {
+    private static function getUserData($name, $password) {
         $connection = Database::getConnection();
-        $sql = "SELECT * FROM users WHERE name = ?";
+        $sql = "SELECT * FROM users WHERE user_name = ?";
         $query = $connection->prepare($sql);
-        $results = $query->execute(array($name));
+        $query->execute(array($name));
+        $results = $query->fetchObject();
         
         if ($results == NULL) {
             return NULL;
         }
-        
-        if (hashPassword($password, $results->iterations) !== $results->password) {
+               
+        if (self::hashPassword($password, $results->user_salt, $results->iterations) != $results->user_password) {
             return NULL;
-        }   
+        }
+        
+        return $results;
+        
     }
     
     private static function setUpUser($results) {
         $user = new User();
         
+        
         $user->id = $results->user_id;
+        $user->salt = $results->user_salt;
         $user->name = $results->user_name;
         $user->email = $results->email;
-        $user->password = $results->password;
-        $user->salt = $results->salt;
+        $user->password = $results->user_password;
         $user->iterations = $results->iterations;
-        $user->access_level = $results->access_level;        
+        $user->access_level = $results->access_level;      
+        return $user;
     }
             
     // todo - extract as generic utility functions?
-    private static function hashPassword($password, $iterations) {
+    private static function hashPassword($password, $salt, $iterations) {
         for ($i = 0; $i < $iterations; $i++) {
-            $password = sha1($password . $this->salt);
+            $password = sha1($password . $salt);
         }
         return $password;
     }
     
     private static function createSalt() {
-        echo "asdasd";
-        return mcrypt_create_iv(SALT_SIZE);
+        
+        return sha1(microtime() . session_id());
     }
     
 }

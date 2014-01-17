@@ -14,16 +14,13 @@
     </head>
     <body>        
         <?php 
-            for ($i = 0; $i < 10000; $i++) {
-                $pw = sha1($pw . $salt);                
-            }
-            
-            echo "Passu: " . $pw . "<br>";
-            echo "generating salt!";
+            echo "Passu ennen hashausta: " . $pw . "<br>";
             $u = new User();
-            echo "GDSADS";
-            echo var_dump($u);       
-            //echo "Salt: " . $u->getSalt();
+            echo "Suola: " . $u->getSalt() . "<br>";
+            $u->setPassword($pw);
+            echo "Passu hashauksen jälkeen: (" . $u->getIterations() . " iteraatiota): " . $u->getPassword() . "<br>"
+            
+            
             
         ?>
     </body>
