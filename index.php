@@ -1,4 +1,5 @@
 <?php
+    require_once "libs/models/user.php";
     $muuttuja = "Moi";
     // testataan tagien poistoa
     $teksti = '<p>Test paragraph.</p><!-- Comment --> <a href="#fragment">Other text</a>';
@@ -13,11 +14,17 @@
     </head>
     <body>        
         <?php 
-            for ($i = 0; $i < 100; $i++) {
+            for ($i = 0; $i < 10000; $i++) {
                 $pw = sha1($pw . $salt);                
             }
             
-            echo "Passu: " . $pw;
+            echo "Passu: " . $pw . "<br>";
+            echo "generating salt!";
+            $u = new User();
+            echo "GDSADS";
+            echo var_dump($u);       
+            //echo "Salt: " . $u->getSalt();
+            
         ?>
     </body>
 </html>
