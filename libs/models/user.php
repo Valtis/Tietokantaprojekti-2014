@@ -4,7 +4,7 @@ require_once "database.php";
 
 class AccessLevel {
     
-    const NORMAL_USER = 0;
+    const NORMAL = 0;
     const BANNED = 1;
     const MODERATOR = 2;
     const ADMIN = 3;    
@@ -26,7 +26,7 @@ class User {
         $this->salt = self::createSalt();
         $this->email = NULL;
         $this->iterations = NULL;
-        $this->access_level = NULL;
+        $this->access_level = AccessLevel::NORMAL;
     }
     
     public function getName() {
