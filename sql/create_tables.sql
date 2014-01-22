@@ -27,9 +27,16 @@ CREATE TABLE replies (
     PRIMARY KEY(post_id, replies_to_id)
 );
 
+CREATE TABLE topics (
+    topic_id serial PRIMARY KEY,
+    name varchar(40) NOT NULL
+);
+
+
 CREATE TABLE threads (
     thread_id serial PRIMARY KEY,
-    starter_id integer REFERENCES users (user_id)
+    starter_id integer REFERENCES users (user_id),
+    topic_id integer REFERENCES topics (topic_id)
 );
 
 CREATE TABLE thread_posts (
@@ -44,13 +51,3 @@ CREATE TABLE read_threads (
     PRIMARY KEY (thread_id, user_id)
 );
 
-CREATE TABLE topics (
-    topic_id serial PRIMARY KEY,
-    name varchar(40) NOT NULL,
-);
-
-CREATE TABLE topic_threads (
-    topic_id integer REFERENCES topics (thread_id),
-    thread_id integer REFERENCES threads (thread_id),
-    PRIMARY KEY (topic_id, thread_id)
-);
