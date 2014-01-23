@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html>
     <head>        
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.css">
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+        
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Please log in</title>
     </head>
     <body>
         <?php if (!empty($data->error)): ?>
-           <div class="alert alert-danger">
-        <?php echo $data->error; ?></div>
+           <div class="alert-danger">
+        <?php echo $data->error; ?>
+           </div>
         <?php endif; ?>
           
         <div class="container">
-          <h1>Log in</h1>
+          <h1 class="center">Log in</h1>
           <form class="form-horizontal" role="form" action="login.php" method="POST">
             <div class="form-group">
               <label for="inputUserName" class="col-md-2 control-label">Username</label>
