@@ -20,10 +20,10 @@ class User {
     private $access_level;
     
        
-    public function __construct() {
+    private function __construct() {
         $this->name = NULL;
         $this->password = NULL;
-        $this->salt = self::createSalt();
+        $this->salt = NULL;
         $this->email = NULL;
         $this->iterations = NULL;
         $this->access_level = AccessLevel::NORMAL;
@@ -53,6 +53,29 @@ class User {
         return $this->salt;        
     }
     
+    public static function userExists($name) {
+        $results = self::executeQuery("SELECT * FROM users WHERE user_name = ?", array($name));
+        return !empty($results);
+    }
+    
+    public static function createNewUser($name, $email, $password) {
+       
+        $salt = self::createSalt();
+ 
+        self::saveNewUser(
+                $name, 
+                $email, 
+                self::hashPassword($password, $salt, PASSWORD_HASHING_ITERATIONS),
+                $salt,
+                PASSWORD_HASHING_ITERATIONS,
+                AccessLevel::NORMAL
+                );
+    }
+    
+    private static function saveNewUser($name, $email, $password, $salt, $iterations, $access_level) {
+        self::executeQuery("INSERT INTO users VALUES (DEFAULT, ?, ?, ?, ?, ?, ?)", array($name, $email, $password, $salt, $iterations, $access_level));
+    }
+    
     public static function loadUser($name, $password) {
         $results = self::getUserData($name, $password);
         
@@ -64,11 +87,7 @@ class User {
     }
     
     private static function getUserData($name, $password) {
-        $connection = Database::getConnection();
-        $sql = "SELECT * FROM users WHERE user_name = ?";
-        $query = $connection->prepare($sql);
-        $query->execute(array($name));
-        $results = $query->fetchObject();
+        $results = self::executeQuery("SELECT * FROM users WHERE user_name = ?", array($name));
         
         if ($results == NULL) {
             return NULL;
@@ -80,6 +99,13 @@ class User {
         
         return $results;
         
+    }
+    
+    private static function executeQuery($sql, $parameters = array()) {
+        $connection = Database::getConnection();
+        $query = $connection->prepare($sql);
+        $query->execute($parameters);
+        return $query->fetchObject();
     }
     
     private static function setUpUser($results) {

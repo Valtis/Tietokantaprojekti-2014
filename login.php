@@ -2,20 +2,25 @@
   require_once "libs/utility.php";
   require_once "libs/models/user.php";
   
+  if (isLoggedIn()) {
+      redirect("index.php");
+  }
   
   if (empty($_POST["username"]) && !empty($_POST["password"])) {
-      showView("loginView.php", array('error' => "Please insert your username"));
+      setError("Please insert your username");
+      showView("loginView.php");
   
       exit();
   } 
   else if (!empty($_POST["username"]) && empty($_POST["password"])) {
-     showView("loginView.php", array('error' => "Please insert your password"));
+      setError("Please insert your password");
+      showView("loginView.php");
      
-     exit();
+      exit();
   }
   else if (empty($_POST["username"]) && empty($_POST["password"])) {
-    showView("loginView.php");
-    exit(); 
+     showView("loginView.php");
+     exit(); 
   }
   
   $username = htmlspecialchars($_POST["username"]);
@@ -24,7 +29,12 @@
   $user = User::loadUser($username, $password);
   
   if ($user == NULL) {
-      showView("loginView.php", array('error' => "Incorrect username or password"));
-  } 
+      setError("Incorrect username or password");
+      showView("loginView.php");
+  }
   
-  showView("loginView.php", array('error' => "Logged in as " . $user->getName() . " (add redirect to correct page!)"));
+  loginUser($user);
+  
+  setMessage("Welcome " . $user->getName());
+  redirect("index.php");
+    
