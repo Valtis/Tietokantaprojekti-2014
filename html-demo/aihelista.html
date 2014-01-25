@@ -1,14 +1,55 @@
-<!--
-To change this template, choose Tools | Templates
-and open the template in the editor.
--->
 <!DOCTYPE html>
 <html>
     <head>
-        <title></title>
+        <title>Aihelista</title>
+        <link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+        <link rel="stylesheet" type="text/css" href="../css/main.css">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
     <body>
-        <div>TODO write content</div>
+        <script>
+            function askNewName() {
+               // todo - koodi tänne vaihtamista varten
+               window.prompt("Anna uusi nimi");
+            }
+            
+            function confirmDelete() {
+               // todo - koodi tänne vaihtamista varten
+               window.confirm("Oletko varma?");
+            }
+            
+            function newSubforum() {
+               // todo - koodi tänne vaihtamista varten
+               window.prompt("Anna nimi");
+            }
+            
+            
+        </script>
+        <div class="right">
+            <a href="hallintapaneeli.html">Takaisin</a>
+        </div>
+        <table class="table">
+                <thead>
+                  <tr>
+                    <th>Aihealue</th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th><a href="ketju.html">Aihealue 1</a></th>
+                        <th><button type="button" onclick="askNewName()" class="btn btn-default">Uudelleennimeä</button></th>
+                        <th><button type="button" onclick="confirmDelete()" class="btn btn-default">Poista</button></th>
+                    </tr>
+                    <tr>
+                        <th><a href="ketju.html">Aihealue 2</a></th>
+                        <th><button type="button" onclick="askNewName()" class="btn btn-default">Uudelleennimeä</button></th>
+                        <th><button type="button" onclick="confirmDelete()" class="btn btn-default">Poista</button></th>
+                    </tr>
+                </tbody>
+            </table>
+            <th><button type="button" onclick="newSubforum()" class="btn btn-default">Uusi aihealue</button></th>
     </body>
 </html>

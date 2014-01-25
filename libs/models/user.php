@@ -99,14 +99,13 @@ class User {
     // todo - extract as generic utility functions?
     private static function hashPassword($password, $salt, $iterations) {
         for ($i = 0; $i < $iterations; $i++) {
-            $password = sha1($password . $salt);
+            $password = hash("sha256", $password . $salt);
         }
         return $password;
     }
     
     private static function createSalt() {
-        
-        return sha1(microtime() . session_id());
+        return hash("sha256", microtime() . session_id());
     }
     
 }

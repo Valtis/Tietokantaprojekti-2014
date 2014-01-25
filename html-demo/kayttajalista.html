@@ -1,14 +1,57 @@
-<!--
-To change this template, choose Tools | Templates
-and open the template in the editor.
--->
 <!DOCTYPE html>
 <html>
     <head>
-        <title></title>
+        <title>Ketjun lukeneet käyttäjät</title>
+        <link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="../css/main.css">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
     <body>
-        <div>TODO write content</div>
+        <div class="right">
+            <a href="hallintapaneeli.html">Takaisin</a>
+        </div>
+        <table class="table">
+                <thead>
+                  <tr>
+                    <th>Käyttäjät</th>
+                    <th>Käyttäjän rooli</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Lukija1</th>
+                        <th>
+                            <select>
+                                <option value="Normal">Normaali</option>
+                                <option value="Banned">Bannittu</option>
+                                <option value="Moderaattori">Moderaattori</option>
+                                <option value="Admin">Admin</option>
+                            </select>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>Lukija2</th>
+                        <th>
+                            <select>
+                                <option value="Normal">Normaali</option>
+                                <option selected value="Banned">Bannittu</option>
+                                <option value="Moderaattori">Moderaattori</option>
+                                <option value="Admin">Admin</option>
+                            </select>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>Lukija3</th>
+                        <th>
+                            <select  >
+                                <option value="Normal">Normaali</option>
+                                <option value="Banned">Bannittu</option>
+                                <option value="Moderaattori">Moderaattori</option>
+                                <option selected value="Admin">Admin</option>
+                            </select>
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
     </body>
 </html>

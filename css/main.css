@@ -5,3 +5,7 @@
 .right {
     text-align: right;
 }
+
+.left-margin {
+    margin-left: 10px;
+}

@@ -5,4 +5,4 @@ DROP TABLE topics;
 DROP TABLE replies;
 DROP TABLE private_messages;
 DROP TABLE posts;
-DROP TABLE users;
+DROP TABLE users; 

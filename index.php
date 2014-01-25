@@ -3,8 +3,7 @@
     $muuttuja = "Moi";
     // testataan tagien poistoa
     $teksti = '<p>Test paragraph.</p><!-- Comment --> <a href="#fragment">Other text</a>';
-    $pw = "salasana";
-    $salt = "0123456789012345678901234567890123456789";
+    $pw = "adminpassu";
 ?>
 <!DOCTYPE html>
 <html>
