@@ -12,19 +12,15 @@ CREATE TABLE posts (
     post_id serial PRIMARY KEY,
     poster_id integer REFERENCES users (user_id),
     text varchar(4096),
-    posted_date timestamp NOT NULL
+    posted_date timestamp NOT NULL,
+    is_deleted boolean NOT NULL,
+    replies_to integer
 );
 
 CREATE TABLE private_messages (
     post_id integer REFERENCES posts (post_id),
     receiver_id integer REFERENCES users (user_id),
     PRIMARY KEY (post_id, receiver_id)
-);
-
-CREATE TABLE replies (
-    post_id integer REFERENCES posts (post_id),
-    replies_to_id integer REFERENCES posts (post_id),
-    PRIMARY KEY(post_id, replies_to_id)
 );
 
 CREATE TABLE topics (
