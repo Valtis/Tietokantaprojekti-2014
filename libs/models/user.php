@@ -18,15 +18,15 @@ class User {
     private $email;
     private $iterations;
     private $access_level;
-    
-       
-    private function __construct() {
-        $this->name = NULL;
-        $this->password = NULL;
-        $this->salt = NULL;
-        $this->email = NULL;
-        $this->iterations = NULL;
-        $this->access_level = NULL;
+               
+    private function __construct($id, $name, $email, $pw, $salt, $iterations, $access) {
+        $this->id = $id;
+        $this->name = $name;
+        $this->email = $email;
+        $this->password = $pw;
+        $this->salt = $salt;
+        $this->iterations = $iterations;
+        $this->access_level = $access;
     }
     
     public function getID() {
@@ -80,13 +80,13 @@ class User {
         Database::executeQueryReturnSingle("INSERT INTO users VALUES (DEFAULT, ?, ?, ?, ?, ?, ?)", array($name, $email, $password, $salt, $iterations, $access_level));
     }
     
+    public static function loadUserByID($id) {
+        $results = Database::executeQueryReturnSingle("SELECT * FROM users WHERE user_id = ?", array($id));
+        return self::setUpUser($results);
+    }
+    
     public static function loadUser($name, $password) {
         $results = self::getUserData($name, $password);
-        
-        if ($results == NULL) {
-            return NULL;
-        }
-        
         return self::setUpUser($results);
     }
     
@@ -101,21 +101,22 @@ class User {
             return NULL;
         }
         
-        return $results;
-        
+        return $results;  
     }
     
     private static function setUpUser($results) {
-        $user = new User();
-        
-        $user->id = $results->user_id;
-        $user->salt = $results->user_salt;
-        $user->name = $results->user_name;
-        $user->email = $results->email;
-        $user->password = $results->user_password;
-        $user->iterations = $results->iterations;
-        $user->access_level = $results->access_level;      
-        return $user;
+        if ($results == NULL) {
+            return NULL;
+        }
+    
+        return new User(
+                $results->user_id, 
+                $results->user_name,
+                $results->email,
+                $results->user_password, 
+                $results->user_salt, 
+                $results->iterations, 
+                $results->access_level);        
     }
             
     // todo - extract as generic utility functions?

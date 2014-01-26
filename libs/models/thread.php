@@ -1,10 +1,13 @@
 <?php
 require_once "database.php";
+require_once "user.php";
 
-class Topic {
+class Thread {
     private $id;
     private $name;
-    private $topic_thread_count;
+    private $creator;
+    private $post_count;
+    
     
     private function __construct($id, $name, $thread_count) {
         $this->id = $id;
@@ -25,13 +28,16 @@ class Topic {
         return $this->topic_thread_count;
     }
     
-    function loadTopics() {
-        $results = Database::executeQueryReturnAll("SELECT topics.topic_id, name, COUNT(threads.topic_id) AS number_threads FROM topics LEFT JOIN threads ON topics.topic_id = threads.topic_id GROUP BY topics.topic_id, name");
+    function loadThreads() {
+        $results = Database::executeQueryReturnAll("SELECT * FROM threads");
         
         $topics = array();
         $i = 0;
         foreach ($results as $row) {
-            $topics[$i] = new Topic($row->topic_id, $row->name, $row->number_threads);
+            $post_counrt = Database::executeQueryReturnSingle("SELECT COUNT(*) FROM thread_posts WHERE thread_id = ?", array($row->thread_id));
+            $creator = 
+            
+            $topics[$i] = new Topic($row->thread_id, $row->thread_name, $creator->name, $post_count->count);
             $i++;
         }
         

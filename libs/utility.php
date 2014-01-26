@@ -20,6 +20,27 @@
       $_SESSION['user'] = $user;
   }
   
+  function getUser() {
+      return $_SESSION['user'];
+  }
+  
+  function getMainBar() {
+    $param;
+    if (isLoggedIn()) {
+        $param = array(
+            'Control panel' => "control_panel.php",
+            'Log off' => 'logoff.php'   
+          );
+    } else {
+        $param = array(
+           'Control panel' => "control_panel.php",
+           'Log in' => "login.php",
+           'Register' => "register.php"
+        );
+    }
+    return $param;
+ }
+  
   function isLoggedIn() {
       return !empty($_SESSION['user']);
   }

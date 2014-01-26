@@ -1,15 +1,6 @@
-
-<p class="right">
-    <?php
-        // create login\register\logout-links
-        foreach ($raw_data['links'] as $key => $value) {
-            echo '<a href="' . $value . '">' . $key . '</a>' . "\n";
-        }
-    ?>
-</p>
 <div>
-    <h1>Aihealueet</h1>
-    <table class="table">
+    <h1>Topics</h1>
+    <table class="table ">
         <thead>
           <tr>
             <th>Topic</th>
