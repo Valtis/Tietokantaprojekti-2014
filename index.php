@@ -1,6 +1,7 @@
 <?php
   require_once "libs/utility.php";
   require_once "libs/models/user.php";
+  require_once "libs/models/topic.php";
   
   $param;
   if (isLoggedIn()) {
@@ -22,6 +23,5 @@
       );
   }
   
-  
-  
-  showView("threadView.php", $param);
+  $param['topics'] = Topic::loadTopics();
+  showView("mainView.php", $param);

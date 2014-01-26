@@ -10,16 +10,16 @@ CREATE TABLE users (
 
 CREATE TABLE posts (
     post_id serial PRIMARY KEY,
-    poster_id integer REFERENCES users (user_id),
+    poster_id integer REFERENCES users (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
     text varchar(4096),
     posted_date timestamp NOT NULL,
     is_deleted boolean NOT NULL,
-    replies_to integer
+    replies_to integer REFERENCES posts (post_id) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 CREATE TABLE private_messages (
     post_id integer REFERENCES posts (post_id),
-    receiver_id integer REFERENCES users (user_id),
+    receiver_id integer REFERENCES users (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (post_id, receiver_id)
 );
 
@@ -31,19 +31,19 @@ CREATE TABLE topics (
 
 CREATE TABLE threads (
     thread_id serial PRIMARY KEY,
-    starter_id integer REFERENCES users (user_id),
-    topic_id integer REFERENCES topics (topic_id)
+    starter_id integer REFERENCES users (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    topic_id integer REFERENCES topics (topic_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE thread_posts (
-    thread_id integer REFERENCES threads (thread_id),
-    post_id integer REFERENCES posts (post_id),
+    thread_id integer REFERENCES threads (thread_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    post_id integer REFERENCES posts (post_id) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (thread_id, post_id)
 );
 
 CREATE TABLE read_threads (
-    thread_id integer REFERENCES threads (thread_id),
-    user_id integer REFERENCES users (user_id),
+    thread_id integer REFERENCES threads (thread_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    user_id integer REFERENCES users (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (thread_id, user_id)
 );
 

@@ -26,7 +26,11 @@ class User {
         $this->salt = NULL;
         $this->email = NULL;
         $this->iterations = NULL;
-        $this->access_level = AccessLevel::NORMAL;
+        $this->access_level = NULL;
+    }
+    
+    public function getID() {
+        return $this->id;
     }
     
     public function getName() {
@@ -73,7 +77,7 @@ class User {
     }
     
     private static function saveNewUser($name, $email, $password, $salt, $iterations, $access_level) {
-        self::executeQuery("INSERT INTO users VALUES (DEFAULT, ?, ?, ?, ?, ?, ?)", array($name, $email, $password, $salt, $iterations, $access_level));
+        Database::executeQueryReturnSingle("INSERT INTO users VALUES (DEFAULT, ?, ?, ?, ?, ?, ?)", array($name, $email, $password, $salt, $iterations, $access_level));
     }
     
     public static function loadUser($name, $password) {
@@ -87,7 +91,7 @@ class User {
     }
     
     private static function getUserData($name, $password) {
-        $results = self::executeQuery("SELECT * FROM users WHERE user_name = ?", array($name));
+        $results = Database::executeQueryReturnSingle("SELECT * FROM users WHERE user_name = ?", array($name));
         
         if ($results == NULL) {
             return NULL;
@@ -101,16 +105,8 @@ class User {
         
     }
     
-    private static function executeQuery($sql, $parameters = array()) {
-        $connection = Database::getConnection();
-        $query = $connection->prepare($sql);
-        $query->execute($parameters);
-        return $query->fetchObject();
-    }
-    
     private static function setUpUser($results) {
         $user = new User();
-        
         
         $user->id = $results->user_id;
         $user->salt = $results->user_salt;
