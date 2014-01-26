@@ -13,8 +13,8 @@ INSERT INTO topics VALUES
   (DEFAULT, 'Topic 2');
 
 INSERT INTO threads VALUES
-  (DEFAULT, 1, 1),
-  (DEFAULT, 2, 1);
+  (DEFAULT, 'Thread 1', 1, 1),
+  (DEFAULT, 'Thread 2 - Thread harder', 2, 1);
 
 INSERT INTO thread_posts VALUES
   (1, 1),

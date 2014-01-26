@@ -31,6 +31,7 @@ CREATE TABLE topics (
 
 CREATE TABLE threads (
     thread_id serial PRIMARY KEY,
+    thread_name varchar(128) NOT NULL,
     starter_id integer REFERENCES users (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
     topic_id integer REFERENCES topics (topic_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
