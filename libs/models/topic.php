@@ -25,6 +25,7 @@ class Topic {
         return $this->topic_thread_count;
     }
     
+
     function loadTopics() {
         $results = Database::executeQueryReturnAll("SELECT topics.topic_id, name, COUNT(threads.topic_id) AS number_threads FROM topics LEFT JOIN threads ON topics.topic_id = threads.topic_id GROUP BY topics.topic_id, name");
         

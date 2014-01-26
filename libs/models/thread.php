@@ -1,6 +1,6 @@
 <?php
 require_once "database.php";
-require_once "user.php";
+//require_once "user.php";
 
 class Thread {
     private $id;
@@ -9,10 +9,11 @@ class Thread {
     private $post_count;
     
     
-    private function __construct($id, $name, $thread_count) {
+    private function __construct($id, $name, $creator, $thread_count) {
         $this->id = $id;
         $this->name = $name;
-        $this->topic_thread_count = $thread_count;
+        $this->creator = $creator;
+        $this->post_count = $thread_count;
     }
     
     
@@ -24,24 +25,31 @@ class Thread {
         return $this->id;
     }
     
-    public function getThreadCount() {
-        return $this->topic_thread_count;
+    public function getPostCount() {
+        return $this->post_count;
     }
     
-    function loadThreads() {
-        $results = Database::executeQueryReturnAll("SELECT * FROM threads");
+    public function getNewMessagesPosted() {
+        return "PLACEHOLDER";
+    }
+    
+    
+    public function getCreator() {
+        return $this->creator;
+    }
+    
+    function loadThreads($topic_id) {
+        $results = Database::executeQueryReturnAll("SELECT threads.thread_id, thread_name, COUNT(thread_posts.thread_id) AS number_posts FROM threads LEFT JOIN thread_posts ON threads.thread_id = thread_posts.thread_id WHERE topic_id=? GROUP BY threads.thread_id, thread_name", array($topic_id));
         
-        $topics = array();
+        $threads = array();
         $i = 0;
         foreach ($results as $row) {
-            $post_counrt = Database::executeQueryReturnSingle("SELECT COUNT(*) FROM thread_posts WHERE thread_id = ?", array($row->thread_id));
-            $creator = 
-            
-            $topics[$i] = new Topic($row->thread_id, $row->thread_name, $creator->name, $post_count->count);
+           
+            $threads[$i] = new Thread($row->thread_id, $row->thread_name, "PLACEHOLDER", $row->number_posts);
             $i++;
         }
         
-        return $topics;
+        return $threads;
     }
     
 }

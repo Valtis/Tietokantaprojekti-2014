@@ -12,19 +12,29 @@
         
         
         <?php
-            require_once "libs/utility.php";
-            showMessage();
-            echo "<div class=\"right\">\n";
-            
-             // create login\register\logout-links
-            $main_bar = getMainBar();
-            foreach ($main_bar as $key => $value) {
-                echo '<a href="' . $value . '">' . $key . '</a>' . "\n";
-            }
-            
-            echo "</div>\n";
-            require($page);
+        
+        require_once "libs/utility.php";
+        showMessage();
+        
         ?>
+                
+        <div class="right">
+            
+        <?php    
+         // create login\register\logout-links
+        $main_bar = getMainBar();
+        foreach ($main_bar as $key => $value) {
+            echo '<a href="' . $value . '">' . $key . '</a>' . "\n";
+        }
+        
+        ?>
+        </div>
+            
+        
+        <div class="left-margin">
+        <?php require($page); ?>
+        </div>
+        
     </body>
 </html>
 

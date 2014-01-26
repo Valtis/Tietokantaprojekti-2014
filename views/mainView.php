@@ -9,7 +9,6 @@
         </thead>
         <tbody>
             <?php
-                require_once 'libs/models/topic.php';
                 // create topic links
                 foreach ($raw_data['topics'] as $t) {
                     echo "<tr>\n";

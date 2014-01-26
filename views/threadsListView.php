@@ -14,13 +14,12 @@
         </thead>
         <tbody>
             <?php
-                require_once 'libs/models/thread.php';
                 // create topic links
                 foreach ($raw_data['threads'] as $t) {
                     echo "<tr>\n";
                     echo '<th><a href="thread.php?threadid=' . $t->getID() . '">' . $t->getName() . '</a>' . "</th>\n";
                     echo "<th>" . $t->getCreator() . "</th>\n";
-                    echo "<th>" . $t->getMessageCount()  . "</th>\n";
+                    echo "<th>" . $t->getPostCount()  . "</th>\n";
                     echo "<th>" . $t->getNewMessagesPosted()  . "</th>\n";
                     echo "</tr>\n";
                 }
