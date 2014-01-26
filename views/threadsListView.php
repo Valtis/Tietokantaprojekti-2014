@@ -17,7 +17,7 @@
                 // create topic links
                 foreach ($raw_data['threads'] as $t) {
                     echo "<tr>\n";
-                    echo '<th><a href="thread.php?threadid=' . $t->getID() . '">' . $t->getName() . '</a>' . "</th>\n";
+                    echo '<th><a href="thread.php?threadid=' . $t->getID() . '&topicid=' . $raw_data['topicid'] . '">' . $t->getName() . '</a>' . "</th>\n";
                     echo "<th>" . $t->getCreator() . "</th>\n";
                     echo "<th>" . $t->getPostCount()  . "</th>\n";
                     echo "<th>" . $t->getNewMessagesPosted()  . "</th>\n";

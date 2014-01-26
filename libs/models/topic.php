@@ -30,10 +30,10 @@ class Topic {
         $results = Database::executeQueryReturnAll("SELECT topics.topic_id, name, COUNT(threads.topic_id) AS number_threads FROM topics LEFT JOIN threads ON topics.topic_id = threads.topic_id GROUP BY topics.topic_id, name");
         
         $topics = array();
-        $i = 0;
+
         foreach ($results as $row) {
-            $topics[$i] = new Topic($row->topic_id, $row->name, $row->number_threads);
-            $i++;
+            $topics[$row->topic_id] = new Topic($row->topic_id, $row->name, $row->number_threads);
+
         }
         
         return $topics;

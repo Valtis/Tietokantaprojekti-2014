@@ -1,6 +1,5 @@
 <?php
 require_once "database.php";
-//require_once "user.php";
 
 class Thread {
     private $id;
@@ -39,14 +38,16 @@ class Thread {
     }
     
     function loadThreads($topic_id) {
-        $results = Database::executeQueryReturnAll("SELECT threads.thread_id, thread_name, COUNT(thread_posts.thread_id) AS number_posts FROM threads LEFT JOIN thread_posts ON threads.thread_id = thread_posts.thread_id WHERE topic_id=? GROUP BY threads.thread_id, thread_name", array($topic_id));
+       // $results = Database::executeQueryReturnAll("SELECT threads.thread_id, thread_name, COUNT(thread_posts.thread_id) AS number_posts FROM threads LEFT JOIN thread_posts ON threads.thread_id = thread_posts.thread_id WHERE topic_id=? GROUP BY threads.thread_id, thread_name", array($topic_id));
+        
+        $results = Database::executeQueryReturnAll("SELECT threads.thread_id, thread_name, user_name, COUNT(thread_posts.thread_id) AS number_posts "
+                . "FROM threads, thread_posts, users WHERE threads.thread_id = thread_posts.thread_id AND users.user_id=threads.starter_id AND topic_id=? "
+                . "GROUP BY threads.thread_id, thread_name, users.user_name", array($topic_id));
         
         $threads = array();
-        $i = 0;
+
         foreach ($results as $row) {
-           
-            $threads[$i] = new Thread($row->thread_id, $row->thread_name, "PLACEHOLDER", $row->number_posts);
-            $i++;
+            $threads[$row->thread_id] = new Thread($row->thread_id, $row->thread_name, $row->user_name, $row->number_posts);
         }
         
         return $threads;

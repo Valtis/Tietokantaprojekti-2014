@@ -10,5 +10,6 @@
     
     
     $param['threads'] =  Thread::loadThreads($topicID);
+    $param['topicid'] = $topicID;
     
     showView("threadsListView.php", $param);

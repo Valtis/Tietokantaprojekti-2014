@@ -1,4 +1,5 @@
 <?php
+  require_once 'models/user.php';
   session_start();
 
   function showView($page, $data = array()) {
@@ -28,7 +29,7 @@
     $param;
     if (isLoggedIn()) {
         $param = array(
-            'Control panel' => "control_panel.php",
+            'Control panel (' . getUser()->getName() . ')' => "control_panel.php",
             'Log off' => 'logoff.php'   
           );
     } else {

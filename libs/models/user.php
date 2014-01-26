@@ -45,20 +45,33 @@ class User {
         return $this->password;        
     }
     
-    public function setPassword($pw) {
-        $this->password = self::hashPassword($pw, $this->salt, PASSWORD_HASHING_ITERATIONS);   
-        $this->iterations = PASSWORD_HASHING_ITERATIONS;
-    }
-    
     public function getIterations() {
         return $this->iterations;
     }
+    
     public function getSalt() {
         return $this->salt;        
     }
     
+    public function isBanned() {
+        return $this->access_level == AccessLevel::BANNED;        
+    }
+        
+    public function hasNormalAccess() {
+        return $this->access_level != AccessLevel::BANNED;
+    }
+    
+    public function hasModeratorAccess() {
+        return $this->access_level == AccessLevel::MODERATOR || $this->access_level == AccessLevel::ADMIN;
+    }
+    
+    public function hasAdminAccess() {
+        return $this->access_level == AccessLevel::ADMIN;
+    }
+    
+    
     public static function userExists($name) {
-        $results = self::executeQuery("SELECT * FROM users WHERE user_name = ?", array($name));
+        $results = Database::executeQueryReturnSingle("SELECT * FROM users WHERE user_name = ?", array($name));
         return !empty($results);
     }
     

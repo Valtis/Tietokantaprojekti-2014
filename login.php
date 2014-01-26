@@ -33,7 +33,7 @@
       showView("loginView.php");
   }
   
-  loginUser($user);
+  logInUser($user);
   
   setMessage("Welcome " . $user->getName());
   redirect("index.php");
