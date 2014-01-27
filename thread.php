@@ -8,7 +8,7 @@
     $topicID = htmlspecialchars($_GET['topicid']);
     
     if (empty($threadID) || empty($topicID)) {
-        redirect("index.php");
+       // redirect("index.php");
     }
     
     $param['topicid'] = $topicID;
@@ -22,19 +22,24 @@
         // if owner of this post - show edit
         $u = getUser();
         if (!empty($u)) {
-            // moderators, admins and people who have written the post will see edit button
-            if ($u->hasModeratorAccess() || $p->getPosterID() == $u->getID()) {
+            // moderators, admins and people who have written the post will see edit button unless the post has been marked as deleted
+            if ($p->isDeleted() === false && ($u->hasModeratorAccess() || $p->getPosterID() == $u->getID())) {
                 $param['posts'][$index]['showedit'] = true;
             }
             // only moderators and admins will see delete button
-            if ($u->hasModeratorAccess()) {
+            if ($u->hasModeratorAccess() && $p->isDeleted() === false) {
                 $param['posts'][$index]['showdelete'] = true;
             } 
+            
             // anyone who is logged in and is not banned will se reply button
             if ($u->hasNormalAccess()) {
                  $param['posts'][$index]['showreply'] = true;
             }
             
+        }
+       
+        if ($p->repliesToID() !== NULL) {
+            $param['posts'][$index]['quote'] = Post::loadPost($p->repliesToID());
         }
         
         $param['posts'][$index]['postdata'] = $p;

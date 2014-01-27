@@ -12,8 +12,7 @@
         
         
         <?php
-        
-        require_once "libs/utility.php";
+       
         showMessage();
         
         ?>
