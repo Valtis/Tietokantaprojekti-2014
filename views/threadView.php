@@ -34,7 +34,7 @@
                     <?php } if (!empty($p['showedit'])) { ?>
                         <button type="button" onclick="openWindow('edit.php?postid=<?php echo $p['postdata']->getPostID() ?>')" class="btn btn-default">Edit</button>
 
-                    <?php } if (!empty($p['showreply'])) { ?>
+                    <?php } if (!empty($p['showquote'])) { ?>
                         <button type="button" onclick="openWindow('quote.php?postid=<?php echo $p['postdata']->getPostID()?>&threadid=<?php echo $raw_data['threadid']; ?>&topicid=<?php echo $raw_data['topicid']; ?>')" class="btn btn-default">Quote</button>
                         <?php } ?>
                     </div>
@@ -44,7 +44,7 @@
                 
         <?php }?>
   
-        <?php if (isLoggedIn()) { ?>
+        <?php if (!empty($raw_data['showreply'])) { ?>
         <div class ="right">
                 <button type="button" onclick="openWindow('reply.php?threadid=<?php echo $raw_data['threadid']; ?>&topicid=<?php echo $raw_data['topicid']; ?>')" class="btn btn-default">Reply</button>
                 <br><br>

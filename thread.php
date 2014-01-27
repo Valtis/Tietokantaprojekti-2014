@@ -16,11 +16,12 @@
     $posts = Post::loadPosts($threadID);
     
     $index = 0;
+    $u = getUser();
     foreach ($posts as $p) {
         // figure out which buttons to show
         // if mod/admin - show all
         // if owner of this post - show edit
-        $u = getUser();
+       
         if (!empty($u)) {
             // moderators, admins and people who have written the post will see edit button unless the post has been marked as deleted
             if ($p->isDeleted() === false && ($u->hasModeratorAccess() || $p->getPosterID() == $u->getID())) {
@@ -33,7 +34,7 @@
             
             // anyone who is logged in and is not banned will se reply button
             if ($u->hasNormalAccess()) {
-                 $param['posts'][$index]['showreply'] = true;
+                 $param['posts'][$index]['showquote'] = true;
             }
             
         }
@@ -44,6 +45,10 @@
         
         $param['posts'][$index]['postdata'] = $p;
         $index++;
+    }
+    
+    if (isLoggedIn() && !$u->isBanned()) {
+        $param['showreply'] = true;
     }
     
     showView('threadView.php', $param);
