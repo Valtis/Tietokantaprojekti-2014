@@ -8,34 +8,43 @@
 <div class="left-margin">
     <h1>Messages</h1>
     
+        <?php 
+            $thread_topic_url = "?threadid=" . $raw_data['threadid'] . "&topicid=" . $raw_data['topicid'];
+        ?>
 
-        <?php foreach ($raw_data['posts'] as $p) { ?>
+        <?php foreach ($raw_data['posts'] as $p) { 
+            $postid = $p['postdata']->getPostID();
+            $posterid = $p['postdata']->getPosterID();
+            $postername = $p['postdata']->getPosterName();
+            $thread_topic_post_url = $thread_topic_url . "&postid=" . $p['postdata']->getPostID();
+            
+            ?>
         <div class='panel panel-default'>
             <div class='panel-body'>
                 <a id="<?php echo $p['postdata']->getPostID() ?>"></a>
                 <div>
                     <p>
-                        <b><a href="private_message.php?userid=<?php echo $p['postdata']->getPosterID() ?>"><?php echo $p['postdata']->getPosterName(); ?></a></b>
+                        <b><a href="private_message.php?userid=<?php echo $posterid; ?>"><?php echo $postername; ?></a></b>
                         Posted on <?php echo $p['postdata']->getPostDate(); ?>
                     </p>
                     <!-- quote -->
                     <?php if (!empty($p['quote'])) { ?>
                     <p class="alert-info">
-                        <a href="#<?php echo $p['quote']->getPostID(); ?>"><b>Quoting <?php echo $p['quote']->getPosterName()?></b><br><?php echo $p['quote']->getPostText(); ?></a>
+                        <a href="#<?php echo $p['quote']->getPostID(); ?>"><b>Quoting <?php echo $p['quote']->getPosterName()?></b><br><?php echo $p['quote']->getFormattedPostText(); ?></a>
                     </p>
                     <?php } ?>
                     <!-- message -->
-                    <p><?php echo $p['postdata']->getPostText(); ?></p>
+                    <p><?php echo $p['postdata']->getFormattedPostText(); ?></p>
                     <!-- buttons -->
                     <div class="right">
                     <?php if (!empty($p['showdelete'])) { ?>
-                        <button type="button" onclick="confirm_delete(<?php echo $p['postdata']->getPostID()?>)"  class="btn btn-default">Delete</button>
+                        <button type="button" onclick="confirm_delete(<?php echo $postid ?>)"  class="btn btn-default">Delete</button>
 
                     <?php } if (!empty($p['showedit'])) { ?>
-                        <button type="button" onclick="openWindow('edit.php?postid=<?php echo $p['postdata']->getPostID() ?>')" class="btn btn-default">Edit</button>
+                        <button type="button" onclick="openWindow('edit.php<?php echo $thread_topic_post_url; ?>')" class="btn btn-default">Edit</button>
 
                     <?php } if (!empty($p['showquote'])) { ?>
-                        <button type="button" onclick="openWindow('quote.php?postid=<?php echo $p['postdata']->getPostID()?>&threadid=<?php echo $raw_data['threadid']; ?>&topicid=<?php echo $raw_data['topicid']; ?>')" class="btn btn-default">Quote</button>
+                        <button type="button" onclick="openWindow('quote.php<?php echo $thread_topic_post_url ?>')" class="btn btn-default">Quote</button>
                         <?php } ?>
                     </div>
                 </div>    
@@ -46,7 +55,7 @@
   
         <?php if (!empty($raw_data['showreply'])) { ?>
         <div class ="right">
-                <button type="button" onclick="openWindow('reply.php?threadid=<?php echo $raw_data['threadid']; ?>&topicid=<?php echo $raw_data['topicid']; ?>')" class="btn btn-default">Reply</button>
+                <button type="button" onclick="openWindow('reply.php<?php echo $thread_topic_url; ?>')" class="btn btn-default">Reply</button>
                 <br><br>
         </div>
         <?php } ?>

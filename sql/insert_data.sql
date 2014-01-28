@@ -5,8 +5,8 @@ INSERT INTO users VALUES
   (DEFAULT, 'Testi2', 'testi@testaaja.com', '9c311784201f2621830f8543a6dbffa35853f4f5fb888c8c5dc7e5ed73187932', '04d24d659afd08b778519c833720f00717f9aef5d78de863689ca00bc4387eed', 10000, 1);
 
 INSERT INTO posts VALUES
-  (DEFAULT, 1, 'Lorem ipsum etc etc.', '2014-01-23 12:34:56', false, NULL),
-  (DEFAULT, 2, 'Lorem ipsum etc etc.', '2014-01-23 12:36:56', false, NULL);
+  (DEFAULT, 1, 'Lorem ipsum etc etc.', '2014-01-23 12:34:56', 'f', NULL),
+  (DEFAULT, 2, 'Lorem ipsum etc etc.', '2014-01-23 12:36:56', 'f', NULL);
 
 INSERT INTO topics VALUES
   (DEFAULT, 'Topic 1'),

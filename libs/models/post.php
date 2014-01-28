@@ -36,6 +36,16 @@ class Post {
         return $this->text;
     }
     
+    
+    public function getFormattedPostText() {
+        return nl2br($this->text);
+    }
+    
+    public function setPostText($text) {
+        $this->text = $text;
+    }
+    
+    
     public function getPostDate() {
         return $this->posted_date;
     }
@@ -45,7 +55,7 @@ class Post {
     }
     
     public function markAsDeleted($deleter) {
-        $this->is_deleted = "true";
+        $this->is_deleted = true;
         $this->text = "This post has been deleted by " . $deleter;
         $this->replies_to = NULL;
     }
@@ -79,7 +89,7 @@ class Post {
     }
     
     public static function createNewPost($posterid, $threadid, $text, $replies_to = NULL) {
-        $ret = Database::executeQueryReturnSingle("INSERT INTO posts VALUES (DEFAULT, ?, ?, ?, ?, ?) RETURNING post_id", array($posterid, $text, date('Y-m-d H:i:s', time()), "false", $replies_to));
+        $ret = Database::executeQueryReturnSingle("INSERT INTO posts VALUES (DEFAULT, ?, ?, ?, ?, ?) RETURNING post_id", array($posterid, $text, date('Y-m-d H:i:s', time()), 'false', $replies_to));
         
         Database::executeQueryReturnSingle("INSERT INTO thread_posts VALUES (?, ?)", array($threadid, $ret->post_id));
         return $ret->post_id;
@@ -88,10 +98,14 @@ class Post {
   
     
     public function savePost() {
+        $delete = 'f';
+        if ($this->isDeleted()) {
+            $delete = 't';
+        }
         Database::executeQueryReturnSingle("UPDATE posts 
             SET poster_id = ?, text = ?, posted_date = ?, is_deleted = ?, replies_to = ? 
             WHERE post_id = ?",
-                array($this->poster_id, $this->text, $this->posted_date, $this->is_deleted, $this->replies_to, $this->post_id));
+                array($this->poster_id, $this->text, $this->posted_date, $delete, $this->replies_to, $this->post_id));
     }
     
     
