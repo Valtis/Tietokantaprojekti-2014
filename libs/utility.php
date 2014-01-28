@@ -34,7 +34,6 @@
           );
     } else {
         $param = array(
-           'Control panel' => "control_panel.php",
            'Log in' => "login.php",
            'Register' => "register.php"
         );

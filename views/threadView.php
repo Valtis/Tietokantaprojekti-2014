@@ -1,22 +1,23 @@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 <script type="text/javascript" src="js/utility.js"></script>
+<?php 
+            $thread_topic_url = "?threadid=" . $raw_data['threadid'] . "&topicid=" . $raw_data['topicid'];
+?>
 <div class="right">
-    <a href="readers.html?threadid=<?php echo $raw_data['threadid']; ?>">Readers</a>
-    <a href="threads.php?topicid=<?php echo $raw_data['topicid']; ?>">Takaisin</a>
+    <a href="readers.php<?php echo $thread_topic_url; ?>">Readers</a>
+    <a href="threads.php?topicid=<?php echo $raw_data['topicid']; ?>">Threads</a>
 </div>
         
 <div class="left-margin">
     <h1>Messages</h1>
     
-        <?php 
-            $thread_topic_url = "?threadid=" . $raw_data['threadid'] . "&topicid=" . $raw_data['topicid'];
-        ?>
 
         <?php foreach ($raw_data['posts'] as $p) { 
             $postid = $p['postdata']->getPostID();
             $posterid = $p['postdata']->getPosterID();
             $postername = $p['postdata']->getPosterName();
             $thread_topic_post_url = $thread_topic_url . "&postid=" . $p['postdata']->getPostID();
+            $thread_topic_poster_url = $thread_topic_url . "&userid=" . $posterid;
             
             ?>
         <div class='panel panel-default'>
@@ -24,7 +25,7 @@
                 <a id="<?php echo $p['postdata']->getPostID() ?>"></a>
                 <div>
                     <p>
-                        <b><a href="private_message.php?userid=<?php echo $posterid; ?>"><?php echo $postername; ?></a></b>
+                        <b><a href="private_message.php<?php echo $thread_topic_poster_url; ?>"><?php echo $postername; ?></a></b>
                         Posted on <?php echo $p['postdata']->getPostDate(); ?>
                     </p>
                     <!-- quote -->

@@ -9,7 +9,7 @@
     $topicID = htmlspecialchars($_GET['topicid']);
     
     if (empty($threadID) || empty($topicID)) {
-       // redirect("index.php");
+        redirect("index.php");
     }
     
     $param['topicid'] = $topicID;

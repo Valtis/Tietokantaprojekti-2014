@@ -95,12 +95,12 @@ class User {
     
     public static function loadUserByID($id) {
         $results = Database::executeQueryReturnSingle("SELECT * FROM users WHERE user_id = ?", array($id));
-        return self::setUpUser($results);
+        return self::loadUserByDatabaseResults($results);
     }
     
     public static function loadUser($name, $password) {
         $results = self::getUserData($name, $password);
-        return self::setUpUser($results);
+        return self::loadUserByDatabaseResults($results);
     }
     
     private static function getUserData($name, $password) {
@@ -117,7 +117,7 @@ class User {
         return $results;  
     }
     
-    private static function setUpUser($results) {
+    public static function loadUserByDatabaseResults($results) {
         if ($results == NULL) {
             return NULL;
         }

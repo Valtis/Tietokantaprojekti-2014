@@ -1,5 +1,6 @@
 <?php
 require_once "database.php";
+require_once "user.php";
 
 class Thread {
     private $id;
@@ -37,7 +38,7 @@ class Thread {
         return $this->creator;
     }
     
-    function loadThreads($topic_id) {
+    public function loadThreads($topic_id) {
         
         $results = Database::executeQueryReturnAll("SELECT threads.thread_id, thread_name, user_name, COUNT(thread_posts.thread_id) AS number_posts "
                 . "FROM threads, thread_posts, users WHERE threads.thread_id = thread_posts.thread_id AND users.user_id=threads.starter_id AND topic_id=? "
@@ -50,6 +51,22 @@ class Thread {
         }
         
         return $threads;
+    }
+    
+    //loadUserByDatabaseResults;
+    public function getReaders($threadID) {
+        $results = Database::executeQueryReturnAll("SELECT * FROM read_threads, users 
+            WHERE thread_id = ? AND read_threads.user_id = users.user_id", array($threadID));
+     
+        $users = array();
+        foreach ($results as $row) {
+            $user = User::loadUserByDatabaseResults($row);
+            $users[$user->getID()] = $user;
+        }
+        
+        
+        return $users;
+        
     }
     
     public function markAsRead($threadID, $userID, $postID) {
