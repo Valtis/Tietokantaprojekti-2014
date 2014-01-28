@@ -3,6 +3,7 @@
     require_once "libs/utility.php";
     require_once "libs/models/post.php";
     require_once "libs/models/user.php";
+    require_once "libs/models/thread.php";
     
     $threadID = htmlspecialchars($_GET['threadid']);
     $topicID = htmlspecialchars($_GET['topicid']);
@@ -17,6 +18,7 @@
     
     $index = 0;
     $u = getUser();
+    $lastPostID = -1;
     foreach ($posts as $p) {
         // figure out which buttons to show
         // if mod/admin - show all
@@ -45,10 +47,16 @@
         
         $param['posts'][$index]['postdata'] = $p;
         $index++;
+        $lastPostID = $p->getPostID();
     }
     
     if (isLoggedIn() && !$u->isBanned()) {
         $param['showreply'] = true;
+    }
+    
+    // mark thread as read, even if the user is banned
+    if (isLoggedIn()) {
+        Thread::markAsRead($threadID, $u->getID(), $lastPostID);
     }
     
     showView('threadView.php', $param);

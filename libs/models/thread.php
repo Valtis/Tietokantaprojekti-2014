@@ -38,7 +38,6 @@ class Thread {
     }
     
     function loadThreads($topic_id) {
-       // $results = Database::executeQueryReturnAll("SELECT threads.thread_id, thread_name, COUNT(thread_posts.thread_id) AS number_posts FROM threads LEFT JOIN thread_posts ON threads.thread_id = thread_posts.thread_id WHERE topic_id=? GROUP BY threads.thread_id, thread_name", array($topic_id));
         
         $results = Database::executeQueryReturnAll("SELECT threads.thread_id, thread_name, user_name, COUNT(thread_posts.thread_id) AS number_posts "
                 . "FROM threads, thread_posts, users WHERE threads.thread_id = thread_posts.thread_id AND users.user_id=threads.starter_id AND topic_id=? "
@@ -53,4 +52,17 @@ class Thread {
         return $threads;
     }
     
+    public function markAsRead($threadID, $userID, $postID) {
+        $result = Database::executeQueryReturnSingle("SELECT count(*) as count 
+            FROM read_threads 
+            WHERE thread_id = ? AND user_id = ?", array($threadID, $userID));
+        if ($result->count == 0) {
+            Database::executeQueryReturnSingle("INSERT INTO read_threads VALUES (?, ?, ?)", array($threadID, $userID, $postID));
+        } else {
+            Database::executeQueryReturnSingle(
+                    "UPDATE read_threads 
+                        SET post_id = ? 
+                        WHERE thread_id = ? AND user_id = ?", array($postID, $threadID, $userID));
+        }
+    }
 }

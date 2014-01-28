@@ -45,6 +45,7 @@ CREATE TABLE thread_posts (
 CREATE TABLE read_threads (
     thread_id integer REFERENCES threads (thread_id) ON DELETE CASCADE ON UPDATE CASCADE,
     user_id integer REFERENCES users (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    post_id integer REFERENCES posts (post_id) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (thread_id, user_id)
 );
 

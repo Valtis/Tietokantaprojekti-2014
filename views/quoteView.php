@@ -3,7 +3,7 @@
             <a href="thread.php?threadid=<?php echo $raw_data['threadid']; ?>&topicid=<?php echo $raw_data['topicid']; ?>">Back</a>
         </div>
         <div class="container">
-           
+           <h1>Quote</h1>
             <div class='panel panel-default'>
                 <div class='panel-body'>
                     <p>

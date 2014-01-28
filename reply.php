@@ -23,5 +23,4 @@ if (!empty($submit)) {
 
 $param['threadid'] = $threadID;
 $param['topicid'] = $topicID;
-$param['title'] = "Reply";
 showView("replyView.php", $param);
