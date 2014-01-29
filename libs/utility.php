@@ -25,11 +25,24 @@
       return $_SESSION['user'];
   }
   
+  function getName() {
+      if (isLoggedIn()) {
+          $u = getUser();
+          if ($u->isBanned()) {
+            return $u->getName() . " (BANNED)";  
+          } else {
+            return "Hello, "  . $u->getName();
+          }
+      }
+      
+      return "";     
+  }
+  
   function getMainBar() {
     $param;
     if (isLoggedIn()) {
         $param = array(
-            'Control panel (' . getUser()->getName() . ')' => array('page' => "control_panel.php"),
+            'Control panel' => array('page' => "control_panel.php"),
             'Log off' => array('page' => "#", 'onclick' => 'logoff()')
           );
     } else {

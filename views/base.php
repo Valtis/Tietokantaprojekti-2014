@@ -21,6 +21,7 @@
         <div class="right">
             
         <?php    
+        echo getName() . " ";
          // create login\register\logout-links
         $main_bar = getMainBar();
         foreach ($main_bar as $key => $value) {

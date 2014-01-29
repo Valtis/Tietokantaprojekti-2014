@@ -27,8 +27,10 @@
               <?php  } ?>
         </tbody>
     </table>
+    <?php if ($raw_data['shownewthread']) { ?>
     <div class="right">
-        <button class="btn btn-default"">Post new thread</button>
+        <button type="button" class="btn btn-default" onclick="openWindow('new_thread.php?topicid=<?php echo $raw_data['topicid']; ?>')">Post new thread</button>
 
     </div>
+    <?php } ?>
 </div>

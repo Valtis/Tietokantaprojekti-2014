@@ -1,12 +1,14 @@
 <?php
 require_once "database.php";
 require_once "user.php";
+require_once "post.php";
 
 class Thread {
     private $id;
     private $name;
     private $creator;
     private $post_count;
+    private $foo;
     
     
     private function __construct($id, $name, $creator, $thread_count) {
@@ -30,7 +32,7 @@ class Thread {
     }
     
     public function getNewMessagesPosted() {
-        return "PLACEHOLDER";
+        return $this->foo;
     }
     
     
@@ -38,21 +40,33 @@ class Thread {
         return $this->creator;
     }
     
-    public function loadThreads($topic_id) {
+    
+    
+    public static function loadThreads($topic_id) {
         
-        $results = Database::executeQueryReturnAll("SELECT threads.thread_id, thread_name, user_name, COUNT(thread_posts.thread_id) AS number_posts "
+        $results = Database::executeQueryReturnAll("SELECT threads.thread_id, thread_name, user_name, COUNT(thread_posts.thread_id) AS number_posts, 
+                    (SELECT MAX(posted_date) FROM posts, thread_posts WHERE posts.post_id = thread_posts.post_id AND thread_posts.thread_id = threads.thread_id) AS final_date "
                 . "FROM threads, thread_posts, users WHERE threads.thread_id = thread_posts.thread_id AND users.user_id=threads.starter_id AND topic_id=? "
-                . "GROUP BY threads.thread_id, thread_name, users.user_name", array($topic_id));
+                . "GROUP BY threads.thread_id, thread_name, users.user_name " 
+                . "ORDER BY final_date DESC"
+                , array($topic_id));
         
         $threads = array();
 
         foreach ($results as $row) {
             $threads[$row->thread_id] = new Thread($row->thread_id, $row->thread_name, $row->user_name, $row->number_posts);
+            $threads[$row->thread_id]->foo = $row->final_date;
         }
         
         return $threads;
     }
-    
+   
+    public static function createNewThread($userID, $topicID, $title, $text) {
+        
+        $threadID = Database::executeQueryReturnSingle("INSERT INTO threads VALUES (DEFAULT, ?, ?, ?) RETURNING thread_id", array($title, $userID, $topicID));
+        Post::createNewPost($userID, $threadID->thread_id, $text);        
+        return $threadID->thread_id;
+    }
     
     public static function deleteThread($threadID) {
         Database::executeQueryReturnSingle("DELETE FROM posts WHERE post_id IN (SELECT post_id FROM thread_posts WHERE thread_id=?)", array($threadID));

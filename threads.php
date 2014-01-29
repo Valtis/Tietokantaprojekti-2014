@@ -13,8 +13,13 @@
     $param['threads'] =  Thread::loadThreads($topicID);
     $param['topicid'] = $topicID;
     
-    if (isLoggedIn() && getUser()->hasModeratorAccess()) {
-        $param['buttons'] = true;
+    if (isLoggedIn()) {
+        if (getUser()->hasModeratorAccess()) {
+            $param['buttons'] = true;
+        }
+        if (!getUser()->isBanned()) {
+            $param['shownewthread'] = true;
+        }
     }
     
     

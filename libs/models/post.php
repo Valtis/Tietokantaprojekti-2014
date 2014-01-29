@@ -1,5 +1,5 @@
 <?php
-require_once 'libs/models/database.php';
+require_once "database.php";
 
 class Post {
     private $post_id;
