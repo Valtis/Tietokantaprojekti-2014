@@ -1,6 +1,4 @@
-<p class="right">
-    <a href="index.php">Return to main page</a>
-</p>
+
 <div class="container">
   <h1 class ="center">Create your account</h1>
   <form class="form-horizontal" role="form" action="register.php" method="POST">

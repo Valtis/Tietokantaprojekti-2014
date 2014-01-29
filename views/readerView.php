@@ -2,9 +2,7 @@
         $thread_topic_url = "?threadid=" . $raw_data['threadid'] . "&topicid=". $raw_data['topicid'];
         
     ?>
-    <div class ="right"> 
-        <a href="thread.php<?php echo $thread_topic_url; ?>">Thread</a>
-    </div>
+   
 
     <table class="table table-striped table-bordered">
         <thead>

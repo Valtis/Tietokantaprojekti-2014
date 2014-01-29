@@ -1,7 +1,4 @@
 
-<div class="right">
-    <a href="index.php">Back to topic list</a>
-</div>
 <div>
     <table class="table ">
         <thead>

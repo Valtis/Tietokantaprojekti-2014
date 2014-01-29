@@ -1,7 +1,4 @@
 
-        <div class ="right">
-            <a href="thread.php?threadid=<?php echo $raw_data['threadid']; ?>&topicid=<?php echo $raw_data['topicid']; ?>">Back</a>
-        </div>
         <div class="container">
            <h1>Private message</h1>
            <?php if (!empty($raw_data['post'])) { ?>

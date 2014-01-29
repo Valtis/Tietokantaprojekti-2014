@@ -5,7 +5,6 @@
 ?>
 <div class="right">
     <a href="readers.php<?php echo $thread_topic_url; ?>">Readers</a>
-    <a href="threads.php?topicid=<?php echo $raw_data['topicid']; ?>">Threads</a>
 </div>
         
 <div class="left-margin">
