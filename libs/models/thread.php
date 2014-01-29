@@ -53,6 +53,12 @@ class Thread {
         return $threads;
     }
     
+    
+    public static function deleteThread($threadID) {
+        Database::executeQueryReturnSingle("DELETE FROM posts WHERE post_id IN (SELECT post_id FROM thread_posts WHERE thread_id=?)", array($threadID));
+        Database::executeQueryReturnSingle("DELETE FROM threads WHERE thread_id=?", array($threadID));
+    }
+    
     //loadUserByDatabaseResults;
     public function getReaders($threadID) {
         $results = Database::executeQueryReturnAll("SELECT * FROM read_threads, users 

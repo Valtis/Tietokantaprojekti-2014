@@ -24,7 +24,7 @@
       $post->setPostText($text);
       $post->savePost();
       
-      showMessage("You have edited a message");
+      setMessage("You have edited a message");
       redirect("thread.php?threadid=" . $threadID . "&topicid=" . $topicID . "#" . $postID);
   }
   

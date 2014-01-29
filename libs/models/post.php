@@ -94,6 +94,13 @@ class Post {
         Database::executeQueryReturnSingle("INSERT INTO thread_posts VALUES (?, ?)", array($threadid, $ret->post_id));
         return $ret->post_id;
     }
+    
+    public static function createNewPrivateMessage($posterid, $receiverID, $text, $replies_to = NULL) {
+        $ret = Database::executeQueryReturnSingle("INSERT INTO posts VALUES (DEFAULT, ?, ?, ?, ?, ?) RETURNING post_id", array($posterid, $text, date('Y-m-d H:i:s', time()), 'false', $replies_to));
+        
+        Database::executeQueryReturnSingle("INSERT INTO private_messages VALUES (?, ?)", array($ret->post_id, $receiverID));
+        return $ret->post_id;
+    }
 
   
     

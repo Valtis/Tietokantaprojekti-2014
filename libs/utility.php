@@ -29,15 +29,16 @@
     $param;
     if (isLoggedIn()) {
         $param = array(
-            'Control panel (' . getUser()->getName() . ')' => "control_panel.php",
-            'Log off' => 'logoff.php'   
+            'Control panel (' . getUser()->getName() . ')' => array('page' => "control_panel.php"),
+            'Log off' => array('page' => "#", 'onclick' => 'logoff()')
           );
     } else {
         $param = array(
-           'Log in' => "login.php",
-           'Register' => "register.php"
+           'Log in' => array('page' => "login.php"),
+           'Register' => array('page' => "register.php")
         );
     }
+    $param['Main page'] = array('page' => "index.php");
     return $param;
  }
   

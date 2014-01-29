@@ -16,11 +16,17 @@
     if (!empty($submit)) {    
         $postText = htmlspecialchars($_POST['textarea']);
         $newPostID = Post::createNewPost(getUser()->getID(), $threadID, $postText, $postID);
-        showMessage("You have posted a message");
+        setMessage("You have posted a message");
         redirect("thread.php?threadid=" . $threadID . "&topicid=" . $topicID . "#" . $newPostID);
     }
     
     $post = Post::loadPost($postID);
+    
+    if ($post == NULL) {
+        redirect("index.php");   
+    }
+    
+    
     $param['threadid'] = $threadID;
     $param['topicid'] = $topicID;
     $param['postid'] = $postID;

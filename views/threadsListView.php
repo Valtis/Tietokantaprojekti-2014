@@ -12,15 +12,23 @@
         <tbody>
             <?php
                 // create topic links
-                foreach ($raw_data['threads'] as $t) {
-                    echo "<tr>\n";
-                    echo '<th><a href="thread.php?threadid=' . $t->getID() . '&topicid=' . $raw_data['topicid'] . '">' . $t->getName() . '</a>' . "</th>\n";
-                    echo "<th>" . $t->getCreator() . "</th>\n";
-                    echo "<th>" . $t->getPostCount()  . "</th>\n";
-                    echo "<th>" . $t->getNewMessagesPosted()  . "</th>\n";
-                    echo "</tr>\n";
-                }
-            ?>
+                foreach ($raw_data['threads'] as $t) { ?>
+                    <tr>
+                    <th><a href="thread.php?threadid=<?php echo $t->getID()?>&topicid=<?php echo $raw_data['topicid']?>"><?php echo $t->getName() ?> </a></th>
+                    <th> <?php echo $t->getCreator() ?> </th>
+                    <th> <?php echo $t->getPostCount() ?> </th>
+                    <th> <?php echo $t->getNewMessagesPosted() ?> </th>
+                    <th> <?php if (!empty($raw_data['buttons'])) { ?>
+                            <button class="btn btn-default">Rename thread</button>
+                            <button class="btn btn-default" onclick="confirm_thread_delete(<?php echo $t->getID(); ?>, '<?php echo $t->getName(); ?>')">Delete thread</button>
+                        <?php } ?>
+                    </th>
+                    </tr>
+              <?php  } ?>
         </tbody>
     </table>
+    <div class="right">
+        <button class="btn btn-default"">Post new thread</button>
+
+    </div>
 </div>

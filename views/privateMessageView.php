@@ -1,6 +1,6 @@
 
         <div class="container">
-           <h1>Private message</h1>
+           <h1>Private message to <?php echo $raw_data['name']; ?></h1>
            <?php if (!empty($raw_data['post'])) { ?>
             <div class='panel panel-default'>
                 <div class='panel-body'>
@@ -14,7 +14,7 @@
             </div>
            <?php } ?>
             <br>
-            <form action="quote.php?submit=1&threadid=<?php echo $raw_data['threadid']; ?>&topicid=<?php echo $raw_data['topicid']; ?>&postid=<?php echo $raw_data['postid'];  ?>" method="POST">
+            <form action="private_message.php?submit=1&threadid=<?php echo $raw_data['threadid']; ?>&topicid=<?php echo $raw_data['topicid']; ?>&postid=<?php echo $raw_data['postid']; ?>&userid=<?php echo $raw_data['userid']; ?>" method="POST">
 
                     <textarea rows="5" cols="80" name="textarea" ></textarea>
                     <br><br>

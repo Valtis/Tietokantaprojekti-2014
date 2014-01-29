@@ -7,4 +7,3 @@ if (isLoggedIn()) {
     setMessage("You have been logged off");
 }
 
-redirect("index.php");    

@@ -1,10 +1,9 @@
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
-<script type="text/javascript" src="js/utility.js"></script>
 <?php 
             $thread_topic_url = "?threadid=" . $raw_data['threadid'] . "&topicid=" . $raw_data['topicid'];
 ?>
 <div class="right">
     <a href="readers.php<?php echo $thread_topic_url; ?>">Readers</a>
+    <a href="threads.php?topicid=<?php echo $raw_data['topicid'] ?>">Threads</a>
 </div>
         
 <div class="left-margin">
@@ -38,7 +37,7 @@
                     <!-- buttons -->
                     <div class="right">
                     <?php if (!empty($p['showdelete'])) { ?>
-                        <button type="button" onclick="confirm_delete(<?php echo $postid ?>)"  class="btn btn-default">Delete</button>
+                        <button type="button" onclick="confirm_post_delete(<?php echo $postid ?>)"  class="btn btn-default">Delete</button>
 
                     <?php } if (!empty($p['showedit'])) { ?>
                         <button type="button" onclick="openWindow('edit.php<?php echo $thread_topic_post_url; ?>')" class="btn btn-default">Edit</button>
