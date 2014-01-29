@@ -64,13 +64,27 @@ class Thread {
    
     public static function createNewThread($userID, $topicID, $title, $text) {
         
-        $threadID = Database::executeQueryReturnSingle("INSERT INTO threads VALUES (DEFAULT, ?, ?, ?) RETURNING thread_id", array($title, $userID, $topicID));
+        $threadID = Database::executeQueryReturnSingle("INSERT INTO threads 
+            VALUES (DEFAULT, ?, ?, ?) 
+            RETURNING thread_id", array($title, $userID, $topicID));
         Post::createNewPost($userID, $threadID->thread_id, $text);        
         return $threadID->thread_id;
     }
     
+
+    
+    public static function renameThread($threadID, $name) {
+         Database::executeQueryReturnSingle("UPDATE threads 
+            SET thread_name = ? WHERE thread_id = ?", array($name, $threadID));
+    }
+    
     public static function deleteThread($threadID) {
-        Database::executeQueryReturnSingle("DELETE FROM posts WHERE post_id IN (SELECT post_id FROM thread_posts WHERE thread_id=?)", array($threadID));
+        Database::executeQueryReturnSingle("DELETE FROM posts 
+            WHERE post_id 
+            IN 
+              (SELECT post_id 
+                FROM thread_posts 
+                WHERE thread_id=?)", array($threadID));
         Database::executeQueryReturnSingle("DELETE FROM threads WHERE thread_id=?", array($threadID));
     }
     

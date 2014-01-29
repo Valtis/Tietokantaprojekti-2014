@@ -20,6 +20,13 @@ function confirm_thread_delete(id, name) {
     
 }
 
+function ask_new_thread_name(id, oldName) {
+    name = prompt("Give new thread name (empty=cancel)", oldName);
+    if (name != null) {
+        $.get("rename_thread.php?threadid=" + id + "&name="+name, function () { window.location.reload(); });  
+    }
+}
+
 function logoff() {
     $.get("logoff.php", function () { window.location.reload(); });
 }

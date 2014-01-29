@@ -16,9 +16,9 @@ if (!empty($submit)) {
     } else if (empty($text)) {
          setError("Thread needs a starting post");
     } else {
-        Thread::createNewThread(getUser()->getID(), $topicID, $title, $text);
+        $threadID = Thread::createNewThread(getUser()->getID(), $topicID, $title, $text);
         setMessage("You have posted a thread! ");
-        redirect("threads.php?topicid=" . $topicID);
+        redirect("thread.php?topicid=" . $topicID . "&threadid=" . $threadID);
     }
 }
 
