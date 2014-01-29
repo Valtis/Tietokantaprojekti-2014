@@ -8,14 +8,15 @@ class Thread {
     private $name;
     private $creator;
     private $post_count;
-    private $foo;
+    private $last_post;
     
     
-    private function __construct($id, $name, $creator, $thread_count) {
+    private function __construct($id, $name, $creator, $thread_count, $last_post) {
         $this->id = $id;
         $this->name = $name;
         $this->creator = $creator;
         $this->post_count = $thread_count;
+        $this->last_post = $last_post;
     }
     
     
@@ -31,8 +32,8 @@ class Thread {
         return $this->post_count;
     }
     
-    public function getNewMessagesPosted() {
-        return $this->foo;
+    public function getLastPostDate() {
+        return $this->last_post;
     }
     
     
@@ -45,17 +46,17 @@ class Thread {
     public static function loadThreads($topic_id) {
         
         $results = Database::executeQueryReturnAll("SELECT threads.thread_id, thread_name, user_name, COUNT(thread_posts.thread_id) AS number_posts, 
-                    (SELECT MAX(posted_date) FROM posts, thread_posts WHERE posts.post_id = thread_posts.post_id AND thread_posts.thread_id = threads.thread_id) AS final_date "
+                    (SELECT MAX(posted_date) FROM posts, thread_posts WHERE posts.post_id = thread_posts.post_id AND thread_posts.thread_id = threads.thread_id) AS last_post "
                 . "FROM threads, thread_posts, users WHERE threads.thread_id = thread_posts.thread_id AND users.user_id=threads.starter_id AND topic_id=? "
                 . "GROUP BY threads.thread_id, thread_name, users.user_name " 
-                . "ORDER BY final_date DESC"
+                . "ORDER BY last_post DESC"
                 , array($topic_id));
         
         $threads = array();
 
         foreach ($results as $row) {
-            $threads[$row->thread_id] = new Thread($row->thread_id, $row->thread_name, $row->user_name, $row->number_posts);
-            $threads[$row->thread_id]->foo = $row->final_date;
+            $threads[$row->thread_id] = new Thread($row->thread_id, $row->thread_name, $row->user_name, $row->number_posts, $row->last_post);
+ 
         }
         
         return $threads;
