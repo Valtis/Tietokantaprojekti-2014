@@ -73,6 +73,17 @@ class Post {
         
         return new Post($result->post_id, $result->poster_id, $result->user_name, $result->text, $result->posted_date, $result->is_deleted, $result->replies_to);
     }
+    
+    public static function loadLastReadPostFromThread($thread_id, $user_id) {
+        $result = Database::executeQueryReturnSingle("SELECT * FROM posts, read_threads 
+            WHERE posts.post_id = read_threads.post_id AND read_threads.thread_id=? AND read_threads.user_id=?", 
+                array($thread_id, $user_id));
+        
+        if (empty($result)) {
+            return $result;
+        }
+        return self::postLoadHelper($result);
+    }
 
     public static function loadPosts($thread_id) {
 
@@ -80,12 +91,16 @@ class Post {
                 . " WHERE posts.post_id = thread_posts.post_id AND posts.poster_id = users.user_id AND thread_id=? ORDER BY posts.post_id ASC", array($thread_id));
        
         $posts = array();
-        
         foreach ($results as $row) {
-            $posts[$row->post_id] = new Post($row->post_id, $row->poster_id, $row->user_name, $row->text, $row->posted_date, $row->is_deleted, $row->replies_to);
+           $posts[$row->post_id] = self::postLoadHelper($row);
         }
         
         return $posts;
+    }
+    
+    private static function postLoadHelper($row) {
+         return new Post($row->post_id, $row->poster_id, $row->user_name, $row->text, $row->posted_date, $row->is_deleted, $row->replies_to);
+       
     }
     
     public static function createNewPost($posterid, $threadid, $text, $replies_to = NULL) {

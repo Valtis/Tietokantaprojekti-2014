@@ -2,6 +2,7 @@
     require_once "libs/utility.php";
     require_once "libs/models/thread.php";
     require_once "libs/models/user.php";
+    require_once "libs/models/post.php";
     
     $topicID = htmlspecialchars($_GET['topicid']);
     
@@ -10,7 +11,7 @@
     }
     
     
-    $param['threads'] =  Thread::loadThreads($topicID);
+    $threads =  Thread::loadThreads($topicID);
     $param['topicid'] = $topicID;
     
     if (isLoggedIn()) {
@@ -18,9 +19,27 @@
             $param['buttons'] = true;
         }
         if (!getUser()->isBanned()) {
-            $param['shownewthread'] = true;
+            $param['loggedin'] = true;        
         }
     }
+    
+    foreach ($threads as $t) {
+        if (isLoggedIn() && !getUser()->isBanned()) { 
+            $post = Post::loadLastReadPostFromThread($t->getID(), getUser()->getID());
+
+            $text = "Yes";
+            if (!empty($post)) {
+                $id = $post->getPostID();
+                if ($post->getPostDate() == $t->getLastPostDate()) {
+                    $text = "No";
+                }
+            }
+
+            
+        }
+        $param['threads'][$t->getID()] = array('thread' => $t, 'lastreadtext' => $text, 'lastreadid' => $id );
+    }
+    
     
     
     showView("threadsListView.php", $param);
