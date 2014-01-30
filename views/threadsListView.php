@@ -26,13 +26,16 @@
                     <?php if ($raw_data['loggedin']) { ?>
                     <th> <a href="<?php echo $thread_url . "#" . $t['lastreadid']; ?>"> <?php echo $t['lastreadtext']; ?> </a> </th>
                     <?php } ?>
-                    <th> <?php if (!empty($raw_data['buttons'])) { 
+                    <?php if (!empty($raw_data['buttons'])) {
                                 $jsparam = $t['thread']->getID(). ", '" . $t['thread']->getName() . "'"; 
                                 ?>
+                        <th class="right"> 
+                        
                             <button class="btn btn-default" onclick="ask_new_thread_name(<?php echo $jsparam ?>)">Rename thread</button>
                             <button class="btn btn-default" onclick="confirm_thread_delete(<?php echo $jsparam ?>)">Delete thread</button>
+                        </th>
                         <?php } ?>
-                    </th>
+                    
                     
                     </tr>
               <?php  } ?>

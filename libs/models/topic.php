@@ -1,5 +1,6 @@
 <?php
 require_once "database.php";
+require_once "libs/models/thread.php";
 
 class Topic {
     private $id;
@@ -26,8 +27,12 @@ class Topic {
     }
     
 
-    function loadTopics() {
-        $results = Database::executeQueryReturnAll("SELECT topics.topic_id, name, COUNT(threads.topic_id) AS number_threads FROM topics LEFT JOIN threads ON topics.topic_id = threads.topic_id GROUP BY topics.topic_id, name");
+    public static function loadTopics() {
+        $results = Database::executeQueryReturnAll("SELECT topics.topic_id, name, COUNT(threads.topic_id) AS number_threads "
+                . "FROM topics "
+                . "LEFT JOIN threads ON topics.topic_id = threads.topic_id "
+                . "GROUP BY topics.topic_id, name "
+                . "ORDER BY topics.topic_id ASC");
         
         $topics = array();
 
@@ -37,6 +42,28 @@ class Topic {
         }
         
         return $topics;
+    }
+    
+    public static function newTopic($name) {
+       Database::executeQueryReturnSingle("INSERT INTO topics VALUES (DEFAULT, ?)", array($name));
+    }
+    
+    public static function renameTopic($id, $name) {
+        Database::executeQueryReturnSingle("UPDATE topics "
+                . "SET name=? "
+                . "WHERE topic_id=?", array($name, $id));
+    }
+    
+    public static function deleteTopic($id) {
+        $results = Database::executeQueryReturnALL("SELECT thread_id "
+                . "FROM threads WHERE threads.topic_id = ?", array($id));
+        
+        foreach ($results as $row) {
+            Thread::deleteThread($row->thread_id);
+        }
+        
+        Database::executeQueryReturnSingle("DELETE FROM topics "
+                . "WHERE topic_id=?", array($id));
     }
     
 }
