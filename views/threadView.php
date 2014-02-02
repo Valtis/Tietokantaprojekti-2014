@@ -2,12 +2,14 @@
             $thread_topic_url = "?threadid=" . $raw_data['threadid'] . "&topicid=" . $raw_data['topicid'];
 ?>
 <div class="right">
+    <?php if (!empty($raw_data['topicid']) && !empty($raw_data['threadid'])) { ?>
     <a href="readers.php<?php echo $thread_topic_url; ?>">Readers</a>
     <a href="threads.php?topicid=<?php echo $raw_data['topicid'] ?>">Threads</a>
+    <?php } ?>
 </div>
         
 <div class="left-margin">
-    <h1>Messages</h1>
+    <h1><?php echo $raw_data['title'];?></h1>
     
 
         <?php foreach ($raw_data['posts'] as $p) { 

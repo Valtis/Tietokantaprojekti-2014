@@ -18,7 +18,7 @@ CREATE TABLE posts (
 );
 
 CREATE TABLE private_messages (
-    post_id integer REFERENCES posts (post_id),
+    post_id integer REFERENCES posts (post_id) ON DELETE CASCADE ON UPDATE CASCADE,
     receiver_id integer REFERENCES users (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (post_id, receiver_id)
 );

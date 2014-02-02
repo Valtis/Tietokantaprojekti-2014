@@ -11,11 +11,11 @@ class Thread {
     private $last_post;
     
     
-    private function __construct($id, $name, $creator, $thread_count, $last_post) {
+    private function __construct($id, $name, $creator, $post_count, $last_post) {
         $this->id = $id;
         $this->name = $name;
         $this->creator = $creator;
-        $this->post_count = $thread_count;
+        $this->post_count = $post_count;
         $this->last_post = $last_post;
     }
     

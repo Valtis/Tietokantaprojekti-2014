@@ -9,7 +9,6 @@ class Post {
     private $posted_date;
     private $is_deleted;
     private $replies_to;
-    
     private function __construct($id, $poster_id, $poster_name, $text, $posted_date, $is_deleted, $replies_to) {
         $this->post_id = $id;
         $this->poster_id = $poster_id;
@@ -54,6 +53,14 @@ class Post {
         return $this->is_deleted;
     }
     
+    public static function isPrivateMessage($postID, $userID) {
+        
+            $result = Database::executeQueryReturnSingle("SELECT private_messages.post_id as cnt FROM private_messages
+                    WHERE private_messages.post_id = ? AND private_messages.receiver_id = ?", array($postID, $userID));
+            
+            return ($result != NULL);
+    }
+    
     public function markAsDeleted($deleter) {
         $this->is_deleted = true;
         $this->text = "This post has been deleted by " . $deleter;
@@ -72,6 +79,16 @@ class Post {
         }
         
         return new Post($result->post_id, $result->poster_id, $result->user_name, $result->text, $result->posted_date, $result->is_deleted, $result->replies_to);
+    }
+    
+    public static function loadPrivateMessages($user_id) {
+        $results = Database::executeQueryReturnAll("SELECT posts.post_id, poster_id, user_name, text, posted_date, is_deleted, replies_to FROM posts, private_messages, users
+            WHERE posts.post_id = private_messages.post_id AND private_messages.receiver_id = ? AND users.user_id = posts.poster_id", array($user_id));
+        
+        foreach ($results as $row) {
+           $posts[$row->post_id] = self::postLoadHelper($row);
+        }             
+        return $posts;        
     }
     
     public static function loadLastReadPostFromThread($thread_id, $user_id) {
@@ -117,7 +134,10 @@ class Post {
         return $ret->post_id;
     }
 
-  
+    public static function deletePost($postID) {
+        
+        Database::executeQueryReturnSingle("DELETE FROM posts WHERE posts.post_id = ?", array($postID));
+    }
     
     public function savePost() {
         $delete = 'f';

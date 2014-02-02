@@ -12,6 +12,7 @@
         redirect("index.php");
     }
     
+    $param['title'] = "Messages";
     $param['topicid'] = $topicID;
     $param['threadid'] = $threadID;
     $posts = Post::loadPosts($threadID);
