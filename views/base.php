@@ -25,7 +25,7 @@
          // create login\register\logout-links
         $main_bar = getMainBar();
         foreach ($main_bar as $key => $value) {
-            
+            $onclick = "";
             if (!empty($value['onclick'])) {
                 $onclick = 'onclick="' . $value['onclick'] .  '" ';
             }

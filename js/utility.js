@@ -50,6 +50,14 @@ function confirm_topic_delete(id, name) {
     }
 }
 
+
+function handleRoleChange(fieldname, userid) {
+    var newRole = $("#" + fieldname).val();
+ 
+    $.get("role_change.php?userid=" + userid + "&role=" + newRole, function () { window.location.reload(); });
+}
+
+
 function logoff() {
     $.get("logoff.php", function () { window.location.reload(); });
 }

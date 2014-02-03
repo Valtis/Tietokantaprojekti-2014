@@ -53,6 +53,10 @@ class User {
         return $this->salt;        
     }
     
+    public function setAccessLevel($accessLevel) {
+        $this->access_level = $accessLevel;
+    }
+    
     public function isBanned() {
         return $this->access_level == AccessLevel::BANNED;        
     }
@@ -103,6 +107,17 @@ class User {
         return self::loadUserByDatabaseResults($results);
     }
     
+    public static function loadUsers() {
+        $results = Database::executeQueryReturnAll("SELECT * FROM users ORDER BY user_name ASC");
+        $users = array();
+        foreach ($results as $row) {
+            $u = User::loadUserByDatabaseResults($row);
+            $users[$u->getID()] = $u;
+        }
+        
+        return $users;
+    }
+    
     private static function getUserData($name, $password) {
         $results = Database::executeQueryReturnSingle("SELECT * FROM users WHERE user_name = ?", array($name));
         
@@ -131,7 +146,18 @@ class User {
                 $results->iterations, 
                 $results->access_level);        
     }
+    
+    
+    public function saveUser() {
+        Database::executeQueryReturnSingle("UPDATE users 
+            SET user_name = ?, email = ?, user_password = ?, user_salt = ?, iterations = ?, access_level = ? 
+            WHERE user_id = ?", 
+                array($this->name, $this->email, $this->password,
+                    $this->salt, $this->iterations, $this->access_level,
+                    $this->id));
+    }
             
+    
     // todo - extract as generic utility functions?
     private static function hashPassword($password, $salt, $iterations) {
         for ($i = 0; $i < $iterations; $i++) {

@@ -6,7 +6,6 @@
         redirect("index.php");
     }
     
-    if (isLoggedIn()) {
-        $param['showPrivateMessages'] = true;
-    }
+    $param['showPrivateMessages'] = true;
+    
     showView("controlPanelView.php", $param);

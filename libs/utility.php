@@ -72,7 +72,7 @@
       // todo: clean up
       if (!(empty($_SESSION['error']))) {
           
-          echo '<div class="alert-danger">';
+          echo '<div class="alert-danger alert-dismissable">';
           echo '<div class="left-margin">' . $_SESSION['error'] . '</div>';
           echo '</div>';          
           $_SESSION['error'] = NULL;
@@ -80,7 +80,7 @@
       
       if (!(empty($_SESSION['msg']))) {
           
-          echo '<div class="alert-success">';
+          echo '<div class="alert-success alert-dismissable">';
           echo '<div class="left-margin">' . $_SESSION['msg'] . '</div>';
           echo '</div>';          
           $_SESSION['msg'] = NULL;

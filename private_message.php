@@ -20,7 +20,7 @@ if (empty($userID) || !isLoggedIn() || getUser()->isBanned()) {
 if (!empty($threadID) && !empty($topicID)) {
     $_SESSION['redirectPage'] = 'thread.php?threadid=' . $threadID . '&topicid=' . $topicID;
 } else {
-    $_SESSION['redirectPage'] = 'user_list.php';
+    $_SESSION['redirectPage'] = 'user_management.php';
 }
 
 if (getUser()->getID() == $userID) {
