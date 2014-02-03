@@ -15,6 +15,7 @@
     $param['title'] = "Messages";
     $param['topicid'] = $topicID;
     $param['threadid'] = $threadID;
+    $param['showThreadLinks'] = true;
     $posts = Post::loadPosts($threadID);
     
     $index = 0;

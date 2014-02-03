@@ -2,16 +2,21 @@
             $thread_topic_url = "?threadid=" . $raw_data['threadid'] . "&topicid=" . $raw_data['topicid'];
 ?>
 <div class="right">
-    <?php if (!empty($raw_data['topicid']) && !empty($raw_data['threadid'])) { ?>
+    <?php if ($raw_data['showThreadLinks']) { ?>
     <a href="readers.php<?php echo $thread_topic_url; ?>">Readers</a>
-    <a href="threads.php?topicid=<?php echo $raw_data['topicid'] ?>">Threads</a>
     <?php } ?>
 </div>
         
 <div class="left-margin">
+    <?php if ($raw_data['showThreadLinks']) { ?>
+    <h3><a href="threads.php?topicid=<?php echo $raw_data['topicid']; ?>">Back to topic</a></h3>
+    <?php } ?>
+    
     <h1><?php echo $raw_data['title'];?></h1>
     
-
+        <?php if (empty($raw_data['posts'])) {
+            echo "No messages";
+        } ?>
         <?php foreach ($raw_data['posts'] as $p) { 
             $postid = $p['postdata']->getPostID();
             $posterid = $p['postdata']->getPosterID();
@@ -25,7 +30,15 @@
                 <a id="<?php echo $p['postdata']->getPostID() ?>"></a>
                 <div>
                     <p>
-                        <b><a href="private_message.php<?php echo $thread_topic_poster_url; ?>"><?php echo $postername; ?></a></b>
+                        <b><?php if (isLoggedIn()) { 
+                                // only show link if user is logged in
+                                echo '<a href="private_message.php' . $thread_topic_poster_url . '">'; 
+                            }
+                            echo $postername; 
+                            if (isLoggedIn()) { 
+                                echo '</a>';
+                            } ?>
+                            </b>
                         Posted on <?php echo $p['postdata']->getPostDate(); ?>
                     </p>
                     <!-- quote -->
