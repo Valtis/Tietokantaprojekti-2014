@@ -52,6 +52,7 @@
         );
     }
     $param['Main page'] = array('page' => "index.php");
+    $param['Search'] = array('page' => "search.php");
     return $param;
  }
   
