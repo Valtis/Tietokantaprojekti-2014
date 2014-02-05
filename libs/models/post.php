@@ -103,41 +103,11 @@ class Post {
     }
     
     public static function findPostsByUsername($username) {
-        $results = Database::executeQueryReturnAll(
-                "SELECT posts.post_id, poster_id, user_name, text, posted_date, is_deleted, replies_to, threads.thread_id, topic_id 
-                    FROM posts, thread_posts, users, threads 
-                    WHERE posts.post_id = thread_posts.post_id 
-                    AND users.user_id = posts.poster_id 
-                    AND threads.thread_id = thread_posts.thread_id
-                    AND users.user_name = ?
-                    ORDER BY posted_date DESC",
-                array($username));
-        $posts = array();
-        foreach ($results as $row) {
-           $posts[$row->post_id]['post'] = self::postLoadHelper($row);
-           $posts[$row->post_id]['threadid'] = $row->thread_id;
-           $posts[$row->post_id]['topicid'] = $row->topic_id;
-        }
-        return $posts;
+        return self::findPostsByUsernameAndContent($username, "");
     }
     
     public static function findPostsByContent($word) {
-        $results = Database::executeQueryReturnAll(
-                "SELECT posts.post_id, poster_id, user_name, text, posted_date, is_deleted, replies_to, threads.thread_id, topic_id 
-                    FROM posts, thread_posts, users, threads 
-                    WHERE posts.post_id = thread_posts.post_id 
-                    AND users.user_id = posts.poster_id 
-                    AND threads.thread_id = thread_posts.thread_id
-                    AND LOWER(text) LIKE ?
-                    ORDER BY posted_date DESC",
-                array(strtolower("%" . $word . "%")));
-        $posts = array();
-        foreach ($results as $row) {
-           $posts[$row->post_id]['post'] = self::postLoadHelper($row);
-           $posts[$row->post_id]['threadid'] = $row->thread_id;
-           $posts[$row->post_id]['topicid'] = $row->topic_id;
-        }
-        return $posts;
+        return self::findPostsByUsernameAndContent("", $word);
     }
     
     public static function findPostsByUsernameAndContent($username, $word) {
@@ -147,10 +117,10 @@ class Post {
                     WHERE posts.post_id = thread_posts.post_id 
                     AND users.user_id = posts.poster_id 
                     AND threads.thread_id = thread_posts.thread_id
-                    AND users.user_name = ?
+                    AND LOWER(users.user_name) LIKE ?
                     AND LOWER(text) LIKE ?
                     ORDER BY posted_date DESC",
-                array($username, strtolower("%" . $word . "%")));
+                array(strtolower("%" . $username . "%"), strtolower("%" . $word . "%")));
         $posts = array();
         foreach ($results as $row) {
            $posts[$row->post_id]['post'] = self::postLoadHelper($row);
