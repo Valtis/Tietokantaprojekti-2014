@@ -1,6 +1,7 @@
 <?php
 
 require_once "libs/utility.php";
+require_once "libs/models/post.php";
 
 $submit = htmlspecialchars($_GET['submit']);
 
@@ -14,17 +15,19 @@ if (!empty($submit)) {
         showView("searchView.php");
     }
     
-    $text = explode(" ", $text);
-    
+    if (!empty($text)) {
+        $text = explode(" ", $text);
+    }
     
     if (empty ($username)) {
-        $param = getPostsByText($text);        
+        $param = getPostsByContent($text);        
     } else if (empty($text)) {
         $param = getPostsByUsername($username);
     } else {
         $param = getPostsByUsernameAndContent($username, $text);
     }
-    
+    $param = attachQuotes($param);
+
     showView("searchResultView.php", $param);
 }
 
@@ -33,24 +36,37 @@ showView("searchView.php");
 function getPostsByContent($text) {
     $param = array();
     foreach ($text as $t) {
+        if (strlen($t) <= 3) {
+            continue;
+        }
         $posts = Post::findPostsByContent($t);
-        merge_array($param, $posts);
+        $param = $param + $posts;
     } 
     return $param;
 }
 
 function getPostsByUsername($username) {
-    $posts = Post::findPostsByUsername($username);
-    $param = array();
-    merge_array($param, $posts);
-    return $param;
+    return Post::findPostsByUsername($username);
 }
 
 function getPostsByUsernameAndContent($username, $text) {
     $param = array();
     foreach ($text as $t) {
+        if (strlen($t) <= 3) {
+            continue;
+        }
         $posts = Post::findPostsByUsernameAndContent($username, $t);
-        merge_array($param, $posts);
+        $param = $param + $posts;
     } 
     return $param;
+}
+
+function attachQuotes($param) {
+    
+    foreach ($param as $p) {
+        if ($p['post']->repliesToID() !== NULL) {
+            $param[$p['post']->getPostID()]['quote'] = Post::loadPost($p['post']->repliesToID());
+        }
+    }
+    return $param;  
 }
