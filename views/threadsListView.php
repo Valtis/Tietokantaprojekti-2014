@@ -16,7 +16,8 @@
             <?php
                 // create topic links
                 foreach ($raw_data['threads'] as $t) { 
-                    $thread_url = 'thread.php?threadid=' . $t['thread']->getID() . '&topicid=' . $raw_data['topicid'];
+                    $thread_url_raw = 'thread.php?threadid=' . $t['thread']->getID() . '&topicid=' . $raw_data['topicid'] ; 
+                    $thread_url = $thread_url_raw . "&page=1";
                     ?>
                     <tr>
                     <th><a href="<?php echo $thread_url?>"> <?php echo $t['thread']->getName() ?> </a></th>
@@ -24,7 +25,7 @@
                     <th> <?php echo $t['thread']->getPostCount() ?> </th>
                     <th> <?php echo $t['thread']->getLastPostDate() ?> </th>
                     <?php if ($raw_data['loggedin']) { ?>
-                    <th> <a href="<?php echo $thread_url . "#" . $t['lastreadid']; ?>"> <?php echo $t['lastreadtext']; ?> </a> </th>
+                    <th> <a href="<?php echo $thread_url_raw . "&postid=" . $t['lastreadid']; ?>"> <?php echo $t['lastreadtext']; ?> </a> </th>
                     <?php } ?>
                     <?php if (!empty($raw_data['buttons'])) {
                                 $jsparam = $t['thread']->getID(). ", '" . $t['thread']->getName() . "'"; 

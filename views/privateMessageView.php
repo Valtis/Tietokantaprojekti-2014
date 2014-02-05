@@ -14,7 +14,7 @@
             </div>
            <?php } ?>
             <br>
-            <form action="private_message.php?submit=1&threadid=<?php echo $raw_data['threadid']; ?>&topicid=<?php echo $raw_data['topicid']; ?>&postid=<?php echo $raw_data['postid']; ?>&userid=<?php echo $raw_data['userid']; ?>" method="POST">
+            <form action="private_message.php?submit=1&threadid=<?php echo $raw_data['threadid']; ?>&topicid=<?php echo $raw_data['topicid']; ?>&postid=<?php echo $raw_data['postid']; ?>&userid=<?php echo $raw_data['userid']; ?>&page=<?php echo $raw_data['page']; ?>" method="POST">
 
                     <textarea class="form-control"  rows="5" cols="80" name="textarea" ></textarea>
                     <br><br>

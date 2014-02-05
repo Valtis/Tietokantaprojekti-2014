@@ -130,11 +130,17 @@ class Post {
         return $posts;    
     }
 
-    public static function loadPosts($thread_id) {
+    public static function loadPosts($thread_id, $limit, $offset) {
 
-        $results = Database::executeQueryReturnAll("SELECT posts.post_id, poster_id, user_name, text, posted_date, is_deleted, replies_to FROM posts, thread_posts, users"
-                . " WHERE posts.post_id = thread_posts.post_id AND posts.poster_id = users.user_id AND thread_id=? ORDER BY posts.post_id ASC", array($thread_id));
-       
+        $results = Database::executeQueryReturnAll(
+                "SELECT posts.post_id, poster_id, user_name, text, posted_date, is_deleted, replies_to 
+                    FROM posts, thread_posts, users 
+                    WHERE posts.post_id = thread_posts.post_id 
+                    AND posts.poster_id = users.user_id 
+                    AND thread_id=? 
+                    ORDER BY posts.post_id ASC LIMIT ? OFFSET ?", 
+                    array($thread_id, $limit, $offset));
+     
         $posts = array();
         foreach ($results as $row) {
            $posts[$row->post_id] = self::postLoadHelper($row);

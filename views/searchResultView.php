@@ -6,7 +6,7 @@
             
             $postid = $p['post']->getPostID();
             $postername = $p['post']->getPosterName();
-            $url_param = "?threadid=" . $p['threadid'] . "&topicid=" . $p['topicid'] . "#" . $postid;
+            $url_param = "?threadid=" . $p['threadid'] . "&topicid=" . $p['topicid'] . "&postid=" . $postid;
             ?>
         <div class='panel panel-default'>
             <div class='panel-body'>

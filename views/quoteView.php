@@ -13,7 +13,7 @@
             </div>
  
             <br>
-            <form action="quote.php?submit=1&threadid=<?php echo $raw_data['threadid']; ?>&topicid=<?php echo $raw_data['topicid']; ?>&postid=<?php echo $raw_data['postid'];  ?>" method="POST">
+            <form action="quote.php?submit=1&threadid=<?php echo $raw_data['threadid']; ?>&page=<?php echo $raw_data['page']; ?>&topicid=<?php echo $raw_data['topicid']; ?>&postid=<?php echo $raw_data['postid'];  ?>" method="POST">
 
                     <textarea class="form-control"  rows="5" cols="80" name="textarea" ></textarea>
                     <br><br>

@@ -5,10 +5,11 @@ require_once "libs/models/post.php";
 
 $threadID = htmlspecialchars($_GET['threadid']);
 $topicID = htmlspecialchars($_GET['topicid']);
+$page = htmlspecialchars($_GET['page']);
 $submit = htmlspecialchars($_GET['submit']);
 
 
-if (!isLoggedIn() || getUser()->isBanned() || empty($threadID) || empty($topicID)) {
+if (!isLoggedIn() || getUser()->isBanned() || empty($threadID) || empty($topicID) || empty($page)) {
     redirect("index.php");
 }
 
@@ -18,9 +19,10 @@ if (!empty($submit)) {
     $newPostID = Post::createNewPost(getUser()->getID(), $threadID, $postText);
     showMessage("You have posted a message");
     
-    redirect("thread.php?threadid=" . $threadID . "&topicid=" . $topicID . "#" . $newPostID);
+    redirect("thread.php?threadid=" . $threadID . "&topicid=" . $topicID . "&postid=" . $newPostID);
 }
 
 $param['threadid'] = $threadID;
 $param['topicid'] = $topicID;
+$param['page'] = $page;
 showView("replyView.php", $param);

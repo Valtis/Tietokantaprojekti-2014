@@ -25,7 +25,7 @@
       $post->savePost();
       
       setMessage("You have edited a message");
-      redirect("thread.php?threadid=" . $threadID . "&topicid=" . $topicID . "#" . $postID);
+      redirect("thread.php?threadid=" . $threadID . "&topicid=" . $topicID . "&postid=" . $postID);
   }
   
   $params['postid'] = $postID;

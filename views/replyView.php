@@ -2,7 +2,7 @@
         <div class="container">
             <h1>Reply</h1>
             <br>
-            <form action="reply.php?submit=1&threadid=<?php echo $raw_data['threadid']; ?>&topicid=<?php echo $raw_data['topicid']; if (!empty($raw_data['postid'])) { echo '&postid=' . $raw_data['postid']; } ?>" method="POST">
+            <form action="reply.php?submit=1&threadid=<?php echo $raw_data['threadid']; ?>&page=<?php echo $raw_data['page']; ?>&topicid=<?php echo $raw_data['topicid']; if (!empty($raw_data['postid'])) { echo '&postid=' . $raw_data['postid']; } ?>" method="POST">
 
                     <textarea class="form-control" rows="5" cols="80" name="textarea" ></textarea>
                     <br><br>

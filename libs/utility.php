@@ -1,6 +1,8 @@
 <?php
   require_once 'models/user.php';
   session_start();
+  
+  const POSTS_PER_PAGE = 10;
 
   function showView($page, $data = array()) {
     $page = "views/" . $page;

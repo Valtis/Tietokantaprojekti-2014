@@ -6,6 +6,7 @@ require_once "libs/models/post.php";
 $threadID = htmlspecialchars($_GET['threadid']);
 $topicID = htmlspecialchars($_GET['topicid']);
 $userID = htmlspecialchars($_GET['userid']);
+$page = htmlspecialchars($_GET['page']);
 $submit = htmlspecialchars($_GET['submit']);
 
 
@@ -17,8 +18,8 @@ if (empty($userID) || !isLoggedIn() || getUser()->isBanned()) {
 // todo - find a better way for this, feels really hacky
 // basically we can send private messages from a page under the control panel, or from 2 page under thread view
 // we need these values to decide where to redirect after submitting the private message
-if (!empty($threadID) && !empty($topicID)) {
-    $_SESSION['redirectPage'] = 'thread.php?threadid=' . $threadID . '&topicid=' . $topicID;
+if (!empty($threadID) && !empty($topicID) && !empty($page)) {
+    $_SESSION['redirectPage'] = 'thread.php?threadid=' . $threadID . '&topicid=' . $topicID . "&page=" . $page;
 } else {
     $_SESSION['redirectPage'] = 'user_management.php';
 }
@@ -50,4 +51,5 @@ if (!empty($submit)) {
 $param['threadid'] = $threadID;
 $param['topicid'] = $topicID;
 $param['userid'] = $userID;
+$param['page'] = $page;
 showView("privateMessageView.php", $param);

@@ -8,8 +8,9 @@
     $topicID = htmlspecialchars($_GET['topicid']);
     $postID = htmlspecialchars($_GET['postid']);
     $submit = htmlspecialchars($_GET['submit']);
+    $page = htmlspecialchars($_GET['page']);
     
-    if (!isLoggedIn() || getUser()->isBanned() || empty($threadID) || empty($topicID) || empty($postID)) {
+    if (!isLoggedIn() || getUser()->isBanned() || empty($threadID) || empty($topicID) || empty($postID) || empty($page)) {
         redirect("index.php");
     }
     
@@ -17,7 +18,7 @@
         $postText = htmlspecialchars($_POST['textarea']);
         $newPostID = Post::createNewPost(getUser()->getID(), $threadID, $postText, $postID);
         setMessage("You have posted a message");
-        redirect("thread.php?threadid=" . $threadID . "&topicid=" . $topicID . "#" . $newPostID);
+        redirect("thread.php?threadid=" . $threadID . "&topicid=" . $topicID . "&postid=" . $newPostID);
     }
     
     $post = Post::loadPost($postID);

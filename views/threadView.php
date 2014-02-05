@@ -1,5 +1,7 @@
 <?php 
-            $thread_topic_url = "?threadid=" . $raw_data['threadid'] . "&topicid=" . $raw_data['topicid'];
+    $thread_topic_url_raw = "?threadid=" . $raw_data['threadid'] . "&topicid=" . $raw_data['topicid']
+         . "&page="; 
+    $thread_topic_url =  $thread_topic_url_raw . $raw_data['page'];
 ?>
 <div class="right">
     <?php if ($raw_data['showThreadLinks']) { ?>
@@ -44,7 +46,7 @@
                     <!-- quote -->
                     <?php if (!empty($p['quote'])) { ?>
                     <p class="alert-info">
-                        <a href="#<?php echo $p['quote']->getPostID(); ?>"><b>Quoting <?php echo $p['quote']->getPosterName()?></b><br><?php echo $p['quote']->getFormattedPostText(); ?></a>
+                        <a href="thread.php?threadid=<?php echo $raw_data['threadid']?>&topicid=<?php echo $raw_data['topicid']?>&postid=<?php echo $p['quote']->getPostID(); ?>"><b>Quoting <?php echo $p['quote']->getPosterName()?></b><br><?php echo $p['quote']->getFormattedPostText(); ?></a>
                     </p>
                     <?php } ?>
                     <!-- message -->
@@ -69,9 +71,18 @@
   
         <?php if (!empty($raw_data['showreply'])) { ?>
         <div class ="right">
+            <div>
                 <button type="button" onclick="openWindow('reply.php<?php echo $thread_topic_url; ?>')" class="btn btn-default">Reply</button>
                 <br><br>
-        </div>
+            </div>
         <?php } ?>
-
-    
+            <div>
+            <?php
+            if ($raw_data['page'] > 1) { ?>
+                <a href="<?php echo $thread_topic_url_raw . ($raw_data['page'] - 1)?>">Previous page</a>
+            <?php   } 
+            if ($raw_data['page'] < $raw_data['pages']) { ?>
+                <a href="<?php echo $thread_topic_url_raw . ($raw_data['page'] + 1)?>">Next page</a>
+            <?php   } ?>   
+            </div>
+        </div>

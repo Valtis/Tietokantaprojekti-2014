@@ -41,6 +41,13 @@ class Thread {
         return $this->creator;
     }
     
+    public static function getThreadPostCount($thread_id) {
+        $result = Database::executeQueryReturnSingle("
+                SELECT COUNT(thread_posts.thread_id) AS number_posts
+                FROM thread_posts WHERE thread_posts.thread_id = ?",
+                array($thread_id));
+        return $result->number_posts;
+    }
     
     
     public static function loadThreads($topic_id) {
