@@ -33,6 +33,8 @@
                 if ($post->getPostDate() == $t->getLastPostDate()) {
                     $text = "No";
                 }
+            } else {
+                $id = -1;
             }
 
             

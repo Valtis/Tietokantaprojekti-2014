@@ -49,10 +49,9 @@
             } 
             
             // anyone who is logged in and is not banned will se reply button
-            if ($u->hasNormalAccess()) {
+            if ($u->hasNormalAccess() && $p->isDeleted() === false) {
                  $param['posts'][$index]['showquote'] = true;
             }
-            
         }
        
         if ($p->repliesToID() !== NULL) {
@@ -78,8 +77,15 @@
     
     
     function gotoPost($postID, $threadID, $topicID) {
+        // todo, fix this. Horrible
         $posts = Post::loadPosts($threadID, 30000, 0);
         
+        
+        
+        if ($postID == -1) {
+            redirect("thread.php?topicid=" . $topicID . "&threadid=" . $threadID . "&page=1");
+        }
+
         $position = 0;
         foreach ($posts as $p) {
             
