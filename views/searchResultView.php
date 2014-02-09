@@ -12,7 +12,7 @@
             <div class='panel-body'>
                 <div>
                     <p>
-                        <b><a href="#" onclick="window.open('thread.php<?php echo $url_param;?>')"><?php echo $postername;?></b></a>
+                        <b><a href="thread.php<?php echo $url_param;?>" target="_blank" rel="nofollow"><?php echo $postername;?></b></a>
                         Posted on <?php echo $p['post']->getPostDate(); ?>
                     </p>
                     <!-- quote -->

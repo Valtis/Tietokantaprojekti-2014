@@ -1,6 +1,8 @@
 <?
 require_once 'libs/utility.php';
 require_once 'libs/models/thread.php';
+require_once 'libs/models/post.php';
+
 $topicID = htmlspecialchars($_GET['topicid']);
 $submit = htmlspecialchars($_GET['submit']);
 if (empty($topicID) || !isLoggedIn() || getUser()->isBanned()) {
@@ -18,7 +20,7 @@ if (!empty($submit)) {
     } else {
         $threadID = Thread::createNewThread(getUser()->getID(), $topicID, $title, $text);
         setMessage("You have posted a thread! ");
-        redirect("thread.php?topicid=" . $topicID . "&threadid=" . $threadID);
+        redirect("thread.php?topicid=" . $topicID . "&threadid=" . $threadID . "&postid=-1");
     }
 }
 

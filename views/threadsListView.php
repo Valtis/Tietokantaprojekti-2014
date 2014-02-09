@@ -1,5 +1,6 @@
 
 <div>
+    <h3><a href="index.php">Back to main page</a></h3>
     <table class="table ">
         <thead>
           <tr>
