@@ -1,4 +1,11 @@
 <?php 
+/**
+ * This controller handles replies to threads
+ * 
+ * If user is not logged in or is banned, or if url is malformed, user is 
+ * redirected to index page
+ * 
+ */
 require_once "libs/utility.php";
 require_once "libs/models/user.php";
 require_once "libs/models/post.php";
@@ -13,6 +20,7 @@ if (!isLoggedIn() || getUser()->isBanned() || empty($threadID) || empty($topicID
     redirect("index.php");
 }
 
+// if submit field exists, submit the message and redirect user back to thread
 // we allow emptyposting if user really wants to do that
 if (!empty($submit)) {    
     $postText = htmlspecialchars($_POST['textarea']);

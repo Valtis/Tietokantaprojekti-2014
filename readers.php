@@ -1,4 +1,9 @@
 <?php
+/**
+ * This controller handles thread reader list.
+ * 
+ * If parameters are malformed, redirect user to index page
+ */
     require_once "libs/utility.php";
     require_once "libs/models/user.php";
     require_once "libs/models/thread.php";

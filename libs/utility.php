@@ -1,32 +1,48 @@
 <?php
-  require_once 'models/user.php';
+  require_once 'models/user.php'; 
   session_start();
   
   const POSTS_PER_PAGE = 10;
-
+  /**
+   * Helper function; shows requested view and passes parameters forward
+   * 
+   * @param string $page view name
+   * @param array $data. Contains data that view will use
+   */
   function showView($page, $data = array()) {
-    $page = "views/" . $page;
-    $raw_data = $data;
-    $data = (object)$data;
+    $page = "views/" . $page; 
+    $raw_data = $data; // data in raw form
+    $data = (object)$data; // data in object form
     require 'views/base.php';
     exit();
   }
   
-  function useController($controller, $data = array()) {
-      $this->_redirect($controller);
-  }
-   function logOffUser() {
+  /**
+   *  removes user from session data
+   */
+  function logOffUser() {
       $_SESSION['user'] = NULL;
   }
-  
+  /**
+   * Adds user to session
+   * 
+   * @param User $user. User object
+   */
   function logInUser($user) {
       $_SESSION['user'] = $user;
   }
-  
+  /**
+   * Returns user object from session.
+   * @return User. User object
+   */
   function getUser() {
       return $_SESSION['user'];
   }
-  
+  /**
+   * Helper function. Creates the "Hello, username" string for main link bar
+   * Also appends (BANNED) if user is banned.
+   * @return string. User name string
+   */
   function getName() {
       if (isLoggedIn()) {
           $u = getUser();
@@ -39,7 +55,15 @@
       
       return "";     
   }
-  
+  /**
+   * Decides which links will be shown in the main bar. Depends on if user is logged in
+   * or not. Main page and search will always be shown. Control panel, log off, log in 
+   * and register links depend on login status.
+   * 
+   * 
+   * @return map containing page name - link data pairs. Link data contains key-value-pairs
+   * such as 'page' - page link or 'onclick' - function name
+   */
   function getMainBar() {
     $param;
     if (isLoggedIn()) {
@@ -57,22 +81,36 @@
     $param['Search'] = array('page' => "search.php");
     return $param;
  }
-  
+  /**
+   * Returns true if user is logged in, false otherwise
+   * 
+   * @return boolean
+   */
   function isLoggedIn() {
       return !empty($_SESSION['user']);
   }
-    
+  /**
+   * Sets error message. Old message is overridden
+   * 
+   * @param string $msg Error message
+   */
   function setError($msg) {
       $_SESSION['error'] = $msg;
   }
   
-  
+  /**
+   * Sets regular message. Old message is overriden
+   * @param string $msg. Message
+   */
   function setMessage($msg) {
       $_SESSION['msg'] = $msg;
   }
-  
+  /**
+   * Shows messages
+   */
   function showMessage() {
-      // todo: clean up
+      // somewhat ugly. I don't really like how there is html code here. Probably 
+      // should be refactored.
       if (!(empty($_SESSION['error']))) {
           
           echo '<div class="alert-danger alert-dismissable">';
@@ -89,7 +127,10 @@
           $_SESSION['msg'] = NULL;
       }      
   }
-  
+  /**
+   * Opens new page in same tab
+   * @param type $controller. Page controller which should be opened
+   */
   function redirect($controller) {
       header("Location: " . $controller);  
   }

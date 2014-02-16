@@ -1,5 +1,10 @@
 <?php
-
+    /**
+     * This controller handles replies with quote.
+     * 
+     * If user is not logged in or if they are banned, or if the url is malformed,
+     * redirect them to index page
+     */
     require_once "libs/utility.php";
     require_once "libs/models/post.php";
     require_once "libs/models/user.php";
@@ -14,6 +19,15 @@
         redirect("index.php");
     }
     
+    // check that the quoted post actually exists; if not, redirect to index
+    $post = Post::loadPost($postID);
+    
+    if ($post == NULL) {
+        redirect("index.php");   
+    }
+    
+    
+    // if the submit field exists, submit the reply
     if (!empty($submit)) {    
         $postText = htmlspecialchars($_POST['textarea']);
         $newPostID = Post::createNewPost(getUser()->getID(), $threadID, $postText, $postID);
@@ -21,12 +35,8 @@
         redirect("thread.php?threadid=" . $threadID . "&topicid=" . $topicID . "&postid=" . $newPostID);
     }
     
-    $post = Post::loadPost($postID);
-    
-    if ($post == NULL) {
-        redirect("index.php");   
-    }
-    
+
+    // if submit field does not exists, show the associated view
     
     $param['threadid'] = $threadID;
     $param['topicid'] = $topicID;

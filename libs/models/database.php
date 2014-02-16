@@ -30,10 +30,7 @@
         return $query->fetchAll(PDO::FETCH_OBJ);
     }
     
-    
-    
-        
-    }
+}
 
 
     
