@@ -81,6 +81,15 @@ class Post {
         return new Post($result->post_id, $result->poster_id, $result->user_name, $result->text, $result->posted_date, $result->is_deleted, $result->replies_to);
     }
     
+    public static function getPostPositionInThread($post_id) {
+        $result = Database::executeQueryReturnSingle("SELECT count(*) FROM thread_posts "
+                . "WHERE thread_posts.post_id < ? AND thread_posts.thread_id = "
+                    . "(SELECT thread_id FROM thread_posts "
+                    . "WHERE thread_posts.post_id = ?)", array($post_id, $post_id));
+        
+        return $result->count;
+    }
+    
     public static function loadPrivateMessages($user_id) {
         $results = Database::executeQueryReturnAll("SELECT posts.post_id, poster_id, user_name, text, posted_date, is_deleted, replies_to FROM posts, private_messages, users
             WHERE posts.post_id = private_messages.post_id AND private_messages.receiver_id = ? AND users.user_id = posts.poster_id", array($user_id));

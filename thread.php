@@ -92,10 +92,6 @@
      * field instead of page. Finds the page where post resides, and reloads the page
      * with that parameter.
      * 
-     * This function is kinda horrible as pages were implemented long after threads were.
-     * 
-     *
-     * 
      * Parameters are required for url construction
      * 
      * @param integer $postID
@@ -103,37 +99,12 @@
      * @param integer $topicID
      */
     function gotoPost($postID, $threadID, $topicID) {
-        // this is baaaad
-        /*
-            Basically we load every post in this thread, and iterate through them
-            and see if the postID values match. On every iteration we increase position variable.
-            If the ids match, we calculate the page where this post is by dividing
-            the post variable with post per pages constant, flooring the result and
-            adding one.
-            
-            If post id is -1 (user clicked unread messages button and has never read the topic before),
-            we can skip this and redirect the user to first page  
-        
-        */
-        
-        // we need to supply this function the number of posts we want to load
-        // this is horrible way to handle this but kinda works.
-        // This whole function needs to burn in a fire.
-        $posts = Post::loadPosts($threadID, 30000, 0);
-               
         
         if ($postID == -1) {
             redirect("thread.php?topicid=" . $topicID . "&threadid=" . $threadID . "&page=1");
         }
 
-        $position = 0;
-        foreach ($posts as $p) {
-            
-            if ($p->getPostID() == $postID) {
-                break;
-            }
-            $position++;
-        }
+        $position = Post::getPostPositionInThread($postID);
         $page = floor($position/POSTS_PER_PAGE) + 1;
         
         redirect("thread.php?topicid=" . $topicID . "&threadid=" . $threadID . "&page=" . $page . "#" . $postID);
