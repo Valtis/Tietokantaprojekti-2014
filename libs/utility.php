@@ -110,24 +110,20 @@
   /**
    * Shows messages
    */
-  function showMessage() {
+  function getMessages() {
+      
       // somewhat ugly. I don't really like how there is html code here. Probably 
       // should be refactored.
-      if (!(empty($_SESSION['error']))) {
-          
-          echo '<div class="alert-danger alert-dismissable">';
-          echo '<div class="left-margin">' . $_SESSION['error'] . '</div>';
-          echo '</div>';          
-          $_SESSION['error'] = NULL;
+      if (isset($_SESSION['error'])) {
+          $param['error'] = $_SESSION['error'];
+          unset($_SESSION['error']);
       }   
       
-      if (!(empty($_SESSION['msg']))) {
-          
-          echo '<div class="alert-success alert-dismissable">';
-          echo '<div class="left-margin">' . $_SESSION['msg'] . '</div>';
-          echo '</div>';          
-          $_SESSION['msg'] = NULL;
+      if (isset($_SESSION['msg'])) {
+          $param['msg'] = $_SESSION['msg'];   
+          unset($_SESSION['msg']);
       }      
+      return $param;
   }
   /**
    * Opens new page in same tab
@@ -135,4 +131,5 @@
    */
   function redirect($controller) {
       header("Location: " . $controller);  
+      exit();
   }

@@ -22,9 +22,11 @@
     
     if (Post::isPrivateMessage($postID, getUser()->getID())) {
         Post::deletePost($postID);        
+        setMessage("Private message has been deleted");
     } else if (getUser()->hasModeratorAccess()) {
         $post = Post::loadPost($postID);
         $post->markAsDeleted(getUser()->getName());
         $post->savePost();
+        setMessage("Post has been deleted");
     }
     

@@ -13,26 +13,24 @@
     $topicID = htmlspecialchars($_GET['topicid']);
     $postID = htmlspecialchars($_GET['postid']);
     $submit = htmlspecialchars($_GET['submit']);
-    $page = htmlspecialchars($_GET['page']);
     
-    if (!isLoggedIn() || getUser()->isBanned() || empty($threadID) || empty($topicID) || empty($postID) || empty($page)) {
+    if (!isLoggedIn() || getUser()->isBanned() || empty($threadID) || empty($topicID) || empty($postID)) {
         redirect("index.php");
     }
     
-    // check that the quoted post actually exists; if not, redirect to index
-    $post = Post::loadPost($postID);
-    
-    if ($post == NULL) {
-        redirect("index.php");   
-    }
-    
-    
+
     // if the submit field exists, submit the reply
     if (!empty($submit)) {    
         $postText = htmlspecialchars($_POST['textarea']);
         $newPostID = Post::createNewPost(getUser()->getID(), $threadID, $postText, $postID);
         setMessage("You have posted a message");
         redirect("thread.php?threadid=" . $threadID . "&topicid=" . $topicID . "&postid=" . $newPostID);
+    }
+    // check that the quoted post actually exists; if not, redirect to index
+    $post = Post::loadPost($postID);
+    
+    if ($post == NULL) {
+        redirect("index.php");   
     }
     
 

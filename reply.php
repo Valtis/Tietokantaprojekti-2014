@@ -22,11 +22,10 @@ if (!isLoggedIn() || getUser()->isBanned() || empty($threadID) || empty($topicID
 
 // if submit field exists, submit the message and redirect user back to thread
 // we allow emptyposting if user really wants to do that
-if (!empty($submit)) {    
+if (!empty($submit)) {
     $postText = htmlspecialchars($_POST['textarea']);
     $newPostID = Post::createNewPost(getUser()->getID(), $threadID, $postText);
-    showMessage("You have posted a message");
-    
+    setMessage("You have posted a message");
     redirect("thread.php?threadid=" . $threadID . "&topicid=" . $topicID . "&postid=" . $newPostID);
 }
 

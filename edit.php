@@ -38,7 +38,7 @@
       $post->setPostText($text);
       $post->savePost();
       
-      setMessage("You have edited a message"); // this does not actually work - why?
+      setMessage("You have edited a message");
       redirect("thread.php?threadid=" . $threadID . "&topicid=" . $topicID . "&postid=" . $postID);
   }
   

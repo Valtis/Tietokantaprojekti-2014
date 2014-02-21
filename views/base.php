@@ -17,9 +17,17 @@
         
         <?php
        
-        showMessage();
-        ?>
-                
+        $messages = getMessages();
+        if (isset($messages['error'])) {?>
+          <div class="alert-danger alert-dismissable">
+          <div class="left-margin"><?php echo $messages['error']; ?></div>
+          </div>          
+        <?php } 
+        if (isset($messages['msg'])) {?>
+          <div class="alert-success alert-dismissable">
+          <div class="left-margin"><?php echo $messages['msg']; ?></div>
+          </div>       
+        <?php } ?>
         <div class="right">
             
         <?php    

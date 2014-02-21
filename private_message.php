@@ -63,7 +63,6 @@ function redirectHelper() {
     $redirect = $_SESSION['redirectPage'];
     unset($_SESSION['redirectPage']);
     redirect($redirect);
-    exit();
 }
 /**
  * Helper function that sets the redirect page based on redirect-parameter
