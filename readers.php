@@ -10,16 +10,17 @@
 
     $threadID = htmlspecialchars($_GET['threadid']);
     $topicID = htmlspecialchars($_GET['topicid']);
+    $page = htmlspecialchars($_GET['page']);
     
-    if (empty($threadID) || empty($topicID)) {
+    if (empty($threadID) || empty($topicID) || empty($page)) {
         redirect("index.php");
     }
     
+    $params['title'] = "Readers";
     $params['threadid'] = $threadID;
     $params['topicid'] = $topicID;
-    
-    
-    
+    $params['page'] = $page;
     $params['users'] = Thread::getReaders($threadID);
+    $params['pagetype'] = "readers";
     
-    showView("readerView.php", $params);
+    showView("usersView.php", $params);

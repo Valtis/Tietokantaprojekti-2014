@@ -26,5 +26,8 @@ foreach ($messages as $m) {
     $param['posts'][$m->getPostID()]['showdelete'] = true;
 }
 
+$param['showPrivateUrl'] = true;
+$param['privateMessageRedirect'] = true;
+
 // we reuse threadView.php for this purpose
 showView('threadView.php', $param);

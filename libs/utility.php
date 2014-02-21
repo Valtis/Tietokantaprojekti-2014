@@ -68,9 +68,11 @@
     $param;
     if (isLoggedIn()) {
         $param = array(
-            'Control panel' => array('page' => "control_panel.php"),
             'Log off' => array('page' => "#", 'onclick' => 'logoff()')
           );
+        if (!getUser()->isBanned()) {
+            $param['Control panel'] = array('page' => "control_panel.php");
+        }
     } else {
         $param = array(
            'Log in' => array('page' => "login.php"),

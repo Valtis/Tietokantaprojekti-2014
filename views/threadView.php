@@ -32,9 +32,15 @@
                 <a id="<?php echo $p['postdata']->getPostID() ?>"></a>
                 <div>
                     <p>
-                        <b><?php if (isLoggedIn()) { 
+                        <b><?php if (!empty($raw_data['showPrivateUrl']) && getUser()->getID() !== $posterid) { 
                                 // only show link if user is logged in
-                                echo '<a href="private_message.php' . $thread_topic_poster_url . '">'; 
+                                echo '<a href="private_message.php';    
+                                if ($raw_data['privateMessageRedirect']) {
+                                    echo "?userid=" . $posterid . "&redirect=privatemessagelist";
+                                } else {
+                                    echo $thread_topic_poster_url . "&redirect=thread"; 
+                                }
+                                echo '" >';
                             }
                             echo $postername; 
                             if (isLoggedIn()) { 

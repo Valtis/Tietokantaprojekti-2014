@@ -10,29 +10,34 @@ require_once "libs/utility.php";
 require_once "libs/models/user.php";
 require_once "libs/models/post.php";
 
-$threadID = htmlspecialchars($_GET['threadid']);
-$topicID = htmlspecialchars($_GET['topicid']);
+
 $userID = htmlspecialchars($_GET['userid']);
-$page = htmlspecialchars($_GET['page']);
 $submit = htmlspecialchars($_GET['submit']);
 
-
 if (empty($userID) || !isLoggedIn() || getUser()->isBanned()) {
+    setError("precondition failure");
     redirect("index.php");
 }
 
-
-// todo - find a better way for this, feels really hacky - should probably include redirect-parameter or something
-// basically we can send private messages by clicking user name in thread view, 
-// control panel user listand thread reader list
-// we need these values to decide where to redirect after submitting the private message
-// Reader view redirect is not implemented - now redirects to user_management.php - FIXME
-
-if (!empty($threadID) && !empty($topicID) && !empty($page)) {
-    $_SESSION['redirectPage'] = 'thread.php?threadid=' . $threadID . '&topicid=' . $topicID . "&page=" . $page;
-} else {
-    $_SESSION['redirectPage'] = 'user_management.php';
+// if submit parameter exists, send the private message
+// we allow emptyposting if user really wants to do that
+if (!empty($submit))
+{
+    // if no redirect page is set - redirect to index
+    // should only happen if user tampers with the url parameters
+    if (empty($_SESSION['redirectPage']))
+    {
+        redirect("index.php");
+    }
+    
+    $postText = htmlspecialchars($_POST['textarea']);
+    Post::createNewPrivateMessage(getUser()->getID(), $userID, $postText);
+    setMessage("You have sent a private message");
+    redirectHelper();    
 }
+
+setRedirectPage();
+
 // if user attempts to send private messages to themselves, redirect them back to
 // previous page
 if (getUser()->getID() == $userID) {
@@ -46,20 +51,7 @@ if ($u == NULL) {
 }
 
 $param['name'] = $u->getName();
-
-// if submit parameter exists, send the private message
-// we allow emptyposting if user really wants to do that
-if (!empty($submit)) {    
-    $postText = htmlspecialchars($_POST['textarea']);
-    Post::createNewPrivateMessage(getUser()->getID(), $userID, $postText);
-    setMessage("You have sent a private message");
-    redirectHelper();    
-}
-// if no submit was specified, show the page view
-$param['threadid'] = $threadID;
-$param['topicid'] = $topicID;
 $param['userid'] = $userID;
-$param['page'] = $page;
 showView("privateMessageView.php", $param);
 
 
@@ -69,6 +61,58 @@ showView("privateMessageView.php", $param);
  */
 function redirectHelper() {
     $redirect = $_SESSION['redirectPage'];
-    $_SESSION['redirectPage'] = NULL;
+    unset($_SESSION['redirectPage']);
     redirect($redirect);
+    exit();
+}
+/**
+ * Helper function that sets the redirect page based on redirect-parameter
+ * Checks parameters and calls the set up function if everything is in order
+ */
+function setRedirectPage()
+{
+    $redirect = htmlspecialchars($_GET['redirect']);
+    // no redirect page given - redirect to index
+    if (empty($redirect)) {
+        redirect("index.php");
+    }
+    
+    setRedirects($redirect);
+}
+/**
+ * Sets up the correct redirect page
+ * 
+ * @param type $redirect redirect parameter
+ */
+function setRedirects($redirect) {
+    if ($redirect === "thread") {
+        threadAndReadersRedirect("thread.php");
+    } else if ($redirect === "readers") {
+        threadAndReadersRedirect("readers.php");
+    } else if ($redirect === "userlist") {
+        userListRedirect();
+    } else if ($redirect === "privatemessagelist") {
+        privateMessageRedirect();
+    } else {
+        redirect("index.php");
+    } 
+}
+
+function threadAndReadersRedirect($pageUrl) {
+    $page = htmlspecialchars($_GET['page']);
+    $threadID = htmlspecialchars($_GET['threadid']);
+    $topicID = htmlspecialchars($_GET['topicid']);
+    // missing parameters - redirect to url
+    if (empty($page) || empty($threadID) || empty($topicID)) {
+        redirect("index.php");
+    }
+    $_SESSION['redirectPage'] = $pageUrl . "?threadid=" . $threadID. "&topicid=" . $topicID . "&page=" . $page;  
+}
+
+function userListRedirect() {
+    $_SESSION['redirectPage'] = "user_management.php";
+}
+
+function privateMessageRedirect() {
+    $_SESSION['redirectPage'] = "private_message_list.php";
 }

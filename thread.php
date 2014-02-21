@@ -75,7 +75,9 @@
     // show reply button as long as user is logged in and is not banned
     if (isLoggedIn() && !$u->isBanned()) {
         $param['showreply'] = true;
+        $param['showPrivateUrl'] = true;
     }
+    
     
     // mark thread as read, even if the user is banned
     if (isLoggedIn()) {

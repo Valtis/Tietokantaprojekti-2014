@@ -1,11 +1,17 @@
-<h1>List of users</h1>
+<?php if ($raw_data['pagetype'] === "readers") {
+  $thread_topic_page_url = "threadid=" . $raw_data['threadid'] . "&topicid=" . $raw_data['topicid'] . "&page=" . $raw_data['page'];
+  echo '<h2><a href="thread.php?' . $thread_topic_page_url . '">Back to thread</a></h2>';
+} else if ($raw_data['pagetype'] === "userlist") {?>
+<h2><a href="control_panel.php">Back to control panel</a></h2>
+<?php
+}
+?>
+<h1><?php echo $raw_data['title']; ?></h1>
     <table class="table table-striped">
         <thead>
             <tr>
                 <th>Users</th>
-                
-            </tr>
-            
+            </tr>            
         </thead>
         <tbody>
             <?php foreach ($raw_data['users'] as $u) { 
@@ -28,12 +34,22 @@
                 
                 ?><tr>
                     <th><?php
-                         if ($showlink) { 
-                        ?><a href="private_message.php?userid=<?php echo $u->getID(); ?>"><?php } 
-                        echo $u->getName(); 
-                            if ($showlink) {
-                        ?></a><?php
-                         } 
+                         if ($showlink) {
+                             echo '<a href="private_message.php?';
+                             if ($raw_data['pagetype'] === "readers") {
+                                 echo  $thread_topic_page_url . "&userid=" . $u->getID() . "&redirect=readers"; 
+                             } else if ($raw_data['pagetype'] === "userlist") {
+                                 echo "userid=" . $u->getID() . "&redirect=userlist";
+                             }
+                             echo '">';
+                        }
+                        
+                        echo $u->getName();
+                        
+                        if ($showlink) {
+                            echo '</a>';
+                        }
+                       
                     ?></th><th class="right">    <?php 
                         if ($showlink && (getUser()->hasAdminAccess() || 
                                 (getUser()->hasModeratorAccess() && !$u->hasModeratorAccess()))) { 
