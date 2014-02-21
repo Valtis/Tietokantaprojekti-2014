@@ -111,25 +111,30 @@ class Post {
         return self::postLoadHelper($result);
     }
     
-    public static function findPostsByUsername($username) {
-        return self::findPostsByUsernameAndContent($username, "");
+    public static function findPostsByUsername($username, $beginDate, $endDate) {
+        return self::findPostsByUsernameAndContent($username, "", $beginDate, $endDate);
     }
     
-    public static function findPostsByContent($word) {
-        return self::findPostsByUsernameAndContent("", $word);
+    public static function findPostsByContent($word, $beginDate, $endDate) {
+        return self::findPostsByUsernameAndContent("", $word, $beginDate, $endDate);
     }
     
-    public static function findPostsByUsernameAndContent($username, $word) {
+    public static function findPostsByUsernameAndContent($username, $word, $beginDate, $endDate) {
         $results = Database::executeQueryReturnAll(
                 "SELECT posts.post_id, poster_id, user_name, text, posted_date, is_deleted, replies_to, threads.thread_id, topic_id 
                     FROM posts, thread_posts, users, threads 
                     WHERE posts.post_id = thread_posts.post_id 
                     AND users.user_id = posts.poster_id 
                     AND threads.thread_id = thread_posts.thread_id
+                    AND posts.posted_date > ?
+                    AND posts.posted_date < ?
                     AND LOWER(users.user_name) LIKE ?
                     AND LOWER(text) LIKE ?
                     ORDER BY posted_date DESC",
-                array(strtolower("%" . $username . "%"), strtolower("%" . $word . "%")));
+                array(date('Y-m-d H:i:s', $beginDate), 
+                    date('Y-m-d H:i:s', $endDate), 
+                    strtolower($username . "%"), 
+                    strtolower($word . "%")));
         $posts = array();
         foreach ($results as $row) {
            $posts[$row->post_id]['post'] = self::postLoadHelper($row);

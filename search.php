@@ -13,6 +13,25 @@ if (!empty($submit)) {
     $username = htmlspecialchars($_POST['username']);
     $text = htmlspecialchars($_POST['text']);
     
+    $beginDate = htmlspecialchars($_POST['dateBegin']);
+    $endDate = htmlspecialchars($_POST['dateEnd']);
+    
+    if (!empty($beginDate)) {
+        $beginDate = strtotime($beginDate);
+    } else {
+        $beginDate = 0;
+    }
+    
+    if (!empty($endDate)) {
+        $endDate = strtotime($endDate);
+    } else {
+        $endDate = time();
+    }
+    
+    if ($beginDate > $endDate) {
+        setError("End date has to be greater than begin date");
+        showView("searchView.php");
+    }
     
     if (empty($username) && empty($text)) {
         setError("You have to search for something");
@@ -24,11 +43,11 @@ if (!empty($submit)) {
     }
     // pick proper search
     if (empty ($username)) {
-        $param = getPostsByContent($text);        
+        $param = getPostsByContent($text, $beginDate, $endDate);        
     } else if (empty($text)) {
-        $param = getPostsByUsername($username);
+        $param = getPostsByUsername($username, $beginDate, $endDate);
     } else {
-        $param = getPostsByUsernameAndContent($username, $text);
+        $param = getPostsByUsernameAndContent($username, $text, $beginDate, $endDate);
     }
     // attach quotes to text if needed
     $param = attachQuotes($param);
@@ -47,14 +66,14 @@ showView("searchView.php");
  * @return array of posts. Returns posts that had one or more search terms.
  * 
  */ 
-function getPostsByContent($text) {
+function getPostsByContent($text, $beginDate, $endDate) {
     $param = array();
     
     foreach ($text as $t) {
         if (strlen($t) < 3) {
             continue;
         }
-        $posts = Post::findPostsByContent($t);
+        $posts = Post::findPostsByContent($t, $beginDate, $endDate);
         $param = $param + $posts;
     } 
     return $param;
@@ -65,8 +84,8 @@ function getPostsByContent($text) {
  * @param String $username. Posters user name must contain this
  * @return type
  */
-function getPostsByUsername($username) {
-    return Post::findPostsByUsername($username);
+function getPostsByUsername($username, $beginDate, $endDate) {
+    return Post::findPostsByUsername($username, $beginDate, $endDate);
 }
 /**
  * Helper function; returns posts which content and name contains given user name
@@ -76,13 +95,13 @@ function getPostsByUsername($username) {
  * @param array of strings $text. List of search terms
  * @return type
  */
-function getPostsByUsernameAndContent($username, $text) {
+function getPostsByUsernameAndContent($username, $text, $beginDate, $endDate) {
     $param = array();
     foreach ($text as $t) {
         if (strlen($t) < 3) {
             continue;
         }
-        $posts = Post::findPostsByUsernameAndContent($username, $t);
+        $posts = Post::findPostsByUsernameAndContent($username, $t, $beginDate, $endDate);
         $param = $param + $posts;
     } 
     return $param;
