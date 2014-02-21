@@ -15,7 +15,7 @@
         </thead>
         <tbody>
             <?php foreach ($raw_data['users'] as $u) { 
-                $showlink = isLoggedIn() && getUser()->getID() !== $u->getID(); 
+                $showlink = isLoggedIn() && !getUser()->isBanned() && getUser()->getID() !== $u->getID(); 
                 $access = "";
                 if ($u->isBanned()) {
                     $access = "Banned";
