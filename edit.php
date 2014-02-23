@@ -34,9 +34,7 @@
   // if submit parameter was specified, submit the edited version and redirect back to thread.
   if (!empty($submit)) {
       $text = htmlspecialchars($_POST['textarea']);
-      $text = $text . "\nThis post was edited by " . getUser()->getName() . " at " . date('Y-m-d H:i:s', time());
-      $post->setPostText($text);
-      $post->savePost();
+      $post->editPost($text, getUser()->getName());
       
       setMessage("You have edited a message");
       redirect("thread.php?threadid=" . $threadID . "&topicid=" . $topicID . "&postid=" . $postID);

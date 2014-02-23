@@ -66,6 +66,12 @@ class Post {
         $this->text = "This post has been deleted by " . $deleter;
         $this->replies_to = NULL;
     }
+    
+    public function editPost($newText, $username) {
+  
+      $this->text = $newText . "\nThis post was edited by " . $username . " at " . date('Y-m-d H:i:s', time());
+      $this->savePost();        
+    }
 
     public function repliesToID() {
         return $this->replies_to;
