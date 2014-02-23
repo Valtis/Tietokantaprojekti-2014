@@ -43,7 +43,7 @@
                                 echo '" >';
                             }
                             echo $postername; 
-                            if (isLoggedIn()) { 
+                            if (!empty($raw_data['showPrivateUrl']) && getUser()->getID() !== $posterid) { 
                                 echo '</a>';
                             } ?>
                             </b>
