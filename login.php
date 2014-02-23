@@ -4,31 +4,31 @@
      */
   require_once "libs/utility.php";
   require_once "libs/models/user.php";
-  
+  $username = htmlspecialchars($_POST["username"]);
+  $password = htmlspecialchars($_POST["password"]);
   if (isLoggedIn()) {
       redirect("index.php");
   }
   // if username is missing but not the password, show error message
-  if (empty($_POST["username"]) && !empty($_POST["password"])) {
+  if (empty($username) && !empty($password)) {
       setError("Please insert your username");
       showView("loginView.php");
   
       exit();
   } // password is missing
-  else if (!empty($_POST["username"]) && empty($_POST["password"])) {
+  else if (!empty($username) && empty($password)) {
       setError("Please insert your password");
       showView("loginView.php");
      
       exit();
   } // botth username and password are missing - show the view without error message
   // as this could very well be the initial page load
-  else if (empty($_POST["username"]) && empty($_POST["password"])) {
+  else if (empty($username) && empty($password)) {
      showView("loginView.php");
      exit(); 
   }
   
-  $username = htmlspecialchars($_POST["username"]);
-  $password = htmlspecialchars($_POST["password"]);
+  
   
   $user = User::loadUser($username, $password);
   

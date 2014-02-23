@@ -133,8 +133,8 @@ class Post {
                     ORDER BY posted_date DESC",
                 array(date('Y-m-d H:i:s', $beginDate), 
                     date('Y-m-d H:i:s', $endDate), 
-                    strtolower($username . "%"), 
-                    strtolower($word . "%")));
+                    strtolower("%" . $username . "%"), 
+                    strtolower("%" . $word . "%")));
         $posts = array();
         foreach ($results as $row) {
            $posts[$row->post_id]['post'] = self::postLoadHelper($row);
