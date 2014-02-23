@@ -46,7 +46,7 @@
         // if mod/admin - show all
         // if owner of this post - show edit
        
-        if (!empty($u) && $p->isDeleted() === false) {
+        if (!empty($u) && $p->isDeleted() === false && !$u->isBanned()) {
             // moderators, admins and people who have written the post will see edit button unless the post has been marked as deleted
             if ($u->hasModeratorAccess() || $p->getPosterID() == $u->getID()) {
                 $param['posts'][$index]['showedit'] = true;
