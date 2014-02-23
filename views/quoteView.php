@@ -8,7 +8,7 @@
                         Posted on <?php echo $raw_data['post']->getPostDate(); ?>
                     </p>
                     
-                    <p><?php echo $raw_data['post']->getPostText(); ?></p>
+                    <p><?php echo $raw_data['post']->getFormattedPostText(); ?></p>
                 </div>
             </div>
  
