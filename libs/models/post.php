@@ -60,15 +60,22 @@ class Post {
             
             return ($result != NULL);
     }
-    
+    /**
+     * Marks post as deleted and replaces its text with notification
+     * @param type $deleter User who deleted the post
+     */
+     
     public function markAsDeleted($deleter) {
         $this->is_deleted = true;
         $this->text = "This post has been deleted by " . $deleter;
         $this->replies_to = NULL;
     }
-    
+    /**
+     * Edits post by changing the text new text and adds edit line with user name.
+     * @param string $newText New text
+     * @param string $username Username of the person who edited the message
+     */
     public function editPost($newText, $username) {
-  
       $this->text = $newText . "\nThis post was edited by " . $username . " at " . date('Y-m-d H:i:s', time());
       $this->savePost();        
     }
@@ -76,15 +83,18 @@ class Post {
     public function repliesToID() {
         return $this->replies_to;
     }
-    
+    /**
+     * Loads post with given id
+     * @param type $post_id
+     * @return \Post|null
+     */
     public static function loadPost($post_id) {
         $result = Database::executeQueryReturnSingle("SELECT post_id, user_name, poster_id, text, posted_date, is_deleted, replies_to
             FROM posts, users WHERE posts.poster_id=users.user_id AND post_id=?", array($post_id));
         if ($result == NULL) {
             return NULL;
         }
-        
-        return new Post($result->post_id, $result->poster_id, $result->user_name, $result->text, $result->posted_date, $result->is_deleted, $result->replies_to);
+        return self::postLoadHelper($result);
     }
     
     public static function getPostPositionInThread($post_id) {
