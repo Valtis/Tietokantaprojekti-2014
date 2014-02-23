@@ -40,7 +40,12 @@ class Thread {
     public function getCreator() {
         return $this->creator;
     }
-    
+    /**
+     * Returns the number of posts belonging to a thread with given id
+     * 
+     * @param integer $thread_id thread id
+     * @return integer number of posts in the thread
+     */
     public static function getThreadPostCount($thread_id) {
         $result = Database::executeQueryReturnSingle("
                 SELECT COUNT(thread_posts.thread_id) AS number_posts
@@ -49,7 +54,12 @@ class Thread {
         return $result->number_posts;
     }
     
-    
+    /**
+     * Loads all threads that belong to given topic
+     * 
+     * @param integer $topic_id topic-id
+     * @return array of threads that belong to the topic
+     */
     public static function loadThreads($topic_id) {
         
         $results = Database::executeQueryReturnAll("SELECT threads.thread_id, thread_name, user_name, COUNT(thread_posts.thread_id) AS number_posts, 
@@ -68,7 +78,15 @@ class Thread {
         
         return $threads;
     }
-   
+   /**
+    * Creates a new thread in the database
+    * 
+    * @param integer $userID user id of the creator
+    * @param integer $topicID topic id it belongs to
+    * @param string $title Thread title
+    * @param string $text Thread text
+    * @return integer id of the new row
+    */
     public static function createNewThread($userID, $topicID, $title, $text) {
         
         $threadID = Database::executeQueryReturnSingle("INSERT INTO threads 
@@ -79,12 +97,20 @@ class Thread {
     }
     
 
-    
+    /**
+     * Renames a thread with given id
+     * 
+     * @param integer $threadID thread id
+     * @param string $name New name
+     */
     public static function renameThread($threadID, $name) {
          Database::executeQueryReturnSingle("UPDATE threads 
             SET thread_name = ? WHERE thread_id = ?", array($name, $threadID));
     }
-    
+    /**
+     * Deletes thread with given id and all the posts that belong to it
+     * @param integer  $threadID thread id
+     */
     public static function deleteThread($threadID) {
         Database::executeQueryReturnSingle("DELETE FROM posts 
             WHERE post_id 
@@ -95,7 +121,11 @@ class Thread {
         Database::executeQueryReturnSingle("DELETE FROM threads WHERE thread_id=?", array($threadID));
     }
     
-    //loadUserByDatabaseResults;
+    /**
+     * Loads the users that have read the given thread 
+     * @param integer $threadID thread id
+     * @return array of users that have read the thread
+     */
     public function getReaders($threadID) {
         $results = Database::executeQueryReturnAll("SELECT * FROM read_threads, users 
             WHERE thread_id = ? AND read_threads.user_id = users.user_id", array($threadID));
@@ -106,15 +136,21 @@ class Thread {
             $users[$user->getID()] = $user;
         }
         
-        
-        return $users;
-        
+        return $users;       
     }
-    
+    /**
+     * Marks the given thread as read and saves the id of the final post on the page
+     * 
+     * @param integer $threadID thread id
+     * @param integer $userID user id
+     * @param integer $postID post id
+     */
     public function markAsRead($threadID, $userID, $postID) {
+        // see if this row exists
         $result = Database::executeQueryReturnSingle("SELECT count(*) as count 
             FROM read_threads 
             WHERE thread_id = ? AND user_id = ?", array($threadID, $userID));
+        // if row exists, update it. Otherwise insert new row
         if ($result->count == 0) {
             Database::executeQueryReturnSingle("INSERT INTO read_threads VALUES (?, ?, ?)", array($threadID, $userID, $postID));
         } else {

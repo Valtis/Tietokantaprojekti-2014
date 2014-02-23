@@ -85,8 +85,8 @@ class Post {
     }
     /**
      * Loads post with given id
-     * @param type $post_id
-     * @return \Post|null
+     * @param integer $post_id post id
+     * @return \Post|null Returns post, or null if no post with given id exists
      */
     public static function loadPost($post_id) {
         $result = Database::executeQueryReturnSingle("SELECT post_id, user_name, poster_id, text, posted_date, is_deleted, replies_to
@@ -96,7 +96,13 @@ class Post {
         }
         return self::postLoadHelper($result);
     }
-    
+    /**
+     * Gets the position of post in a thread (nth message). Used to determine
+     * which page should be loaded when loading a thread.
+     * 
+     * @param integer $post_id post id
+     * @return integer post position in thread
+     */
     public static function getPostPositionInThread($post_id) {
         $result = Database::executeQueryReturnSingle("SELECT count(*) FROM thread_posts "
                 . "WHERE thread_posts.post_id < ? AND thread_posts.thread_id = "
@@ -105,7 +111,12 @@ class Post {
         
         return $result->count;
     }
-    
+    /**
+     * Loads users private messages
+     * 
+     * @param integer $user_id user id
+     * @return array of posts containing private messages belonging to user
+     */
     public static function loadPrivateMessages($user_id) {
         $results = Database::executeQueryReturnAll("SELECT posts.post_id, poster_id, user_name, text, posted_date, is_deleted, replies_to FROM posts, private_messages, users
             WHERE posts.post_id = private_messages.post_id AND private_messages.receiver_id = ? AND users.user_id = posts.poster_id
@@ -116,7 +127,14 @@ class Post {
         }             
         return $posts;        
     }
-    
+    /**
+     * Returns the user's last read post in a thread
+     * 
+     * @param integer $thread_id thread id
+     * @param integer $user_id user id
+     * @return Post Last post on page when user last visited the page or null if 
+     *   no such posts exist (unread thread)
+     */
     public static function loadLastReadPostFromThread($thread_id, $user_id) {
         $result = Database::executeQueryReturnSingle("SELECT * FROM posts, read_threads 
             WHERE posts.post_id = read_threads.post_id AND read_threads.thread_id=? AND read_threads.user_id=?", 
@@ -127,15 +145,38 @@ class Post {
         }
         return self::postLoadHelper($result);
     }
-    
+    /**
+     * Returns all posts between begin and end dates that are posted by user with
+     *   matching user name
+     * @param string $username user name to be searched
+     * @param integer $beginDate earliest date to be accepted (unix timestamp)
+     * @param integer $endDate latest date to be accepted (inclusive) unix timestamp
+     * @return array of posts that match the parameters
+     */
     public static function findPostsByUsername($username, $beginDate, $endDate) {
         return self::findPostsByUsernameAndContent($username, "", $beginDate, $endDate);
     }
-    
+    /**
+     * Returns all posts between begin and end dates that have the given word in the 
+     *   text
+     * @param string $word search term
+     * @param integer $beginDate earliest date to be accepted (unix timestamp)
+     * @param integer $endDate latest date to be accepted (inclusive) unix timestamp
+     * @return array of posts that match the parameters
+     */
     public static function findPostsByContent($word, $beginDate, $endDate) {
         return self::findPostsByUsernameAndContent("", $word, $beginDate, $endDate);
     }
-    
+    /**
+     * Returns all posts between begin and end dates that have the given word in the 
+     *   text and are posted with matching username 
+     * 
+     * @param string $username user name to be searched 
+     * @param string $word search term
+     * @param integer $beginDate earliest date to be accepted (unix timestamp)
+     * @param integer $endDate latest date to be accepted (inclusive) unix timestamp
+     * @return array of posts that match the parameters
+     */
     public static function findPostsByUsernameAndContent($username, $word, $beginDate, $endDate) {
         $results = Database::executeQueryReturnAll(
                 "SELECT posts.post_id, poster_id, user_name, text, posted_date, is_deleted, replies_to, threads.thread_id, topic_id 
@@ -160,7 +201,14 @@ class Post {
         }
         return $posts;    
     }
-
+    /**
+     * Loads posts in a given thread up to a limit starting from offset parameter
+     * 
+     * @param integer $thread_id thread id 
+     * @param integer $limit how many posts are loaded 
+     * @param integer $offset which post is first to be loaded
+     * @return array of posts Posts that match the parameters
+     */
     public static function loadPosts($thread_id, $limit, $offset) {
 
         $results = Database::executeQueryReturnAll(
@@ -179,31 +227,57 @@ class Post {
         
         return $posts;
     }
-    
+    /**
+     * Helper function. Creates a new post from a database row
+     * 
+     * @param object $row row returned from the database that contains post data
+     * @return \Post New Post object containing the data
+     */
     private static function postLoadHelper($row) {
          return new Post($row->post_id, $row->poster_id, $row->user_name, $row->text, $row->posted_date, $row->is_deleted, $row->replies_to);
        
     }
-    
+    /**
+     * Creates a new post in the database. Note: Do not use for private messages
+     * 
+     * @param integer $posterid poster id
+     * @param integer $threadid thread it belongs to 
+     * @param string $text Post texrt
+     * @param integer $replies_to post it replies to. Can be null
+     * @return integer id for the created row
+     */
     public static function createNewPost($posterid, $threadid, $text, $replies_to = NULL) {
         $ret = Database::executeQueryReturnSingle("INSERT INTO posts VALUES (DEFAULT, ?, ?, ?, ?, ?) RETURNING post_id", array($posterid, $text, date('Y-m-d H:i:s', time()), 'false', $replies_to));
         
         Database::executeQueryReturnSingle("INSERT INTO thread_posts VALUES (?, ?)", array($threadid, $ret->post_id));
         return $ret->post_id;
     }
-    
+    /**
+     * Creates a new private message in the database. Note: Do not use for posts
+     * @param integer $posterid poster id
+     * @param integer $receiverID receiver id
+     * @param string $text text
+     * @param integer $replies_to private message it replies to 
+     * @return integer id for the created row
+     */
     public static function createNewPrivateMessage($posterid, $receiverID, $text, $replies_to = NULL) {
         $ret = Database::executeQueryReturnSingle("INSERT INTO posts VALUES (DEFAULT, ?, ?, ?, ?, ?) RETURNING post_id", array($posterid, $text, date('Y-m-d H:i:s', time()), 'false', $replies_to));
         
         Database::executeQueryReturnSingle("INSERT INTO private_messages VALUES (?, ?)", array($ret->post_id, $receiverID));
         return $ret->post_id;
     }
-
+    /**
+     * Deletes post from the database
+     * @param type $postID Post to be deleted
+     */
     public static function deletePost($postID) {
         
         Database::executeQueryReturnSingle("DELETE FROM posts WHERE posts.post_id = ?", array($postID));
     }
-    
+    /**
+     * Saves post into database by updating the row values. Note: Do not use
+     * this to save new posts; use the create-functions for that instead.
+     */
     public function savePost() {
         $delete = 'f';
         if ($this->isDeleted()) {

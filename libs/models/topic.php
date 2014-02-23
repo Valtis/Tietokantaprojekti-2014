@@ -26,7 +26,10 @@ class Topic {
         return $this->topic_thread_count;
     }
     
-
+    /**
+     * Loads all topics
+     * @return array of topics
+     */
     public static function loadTopics() {
         $results = Database::executeQueryReturnAll("SELECT topics.topic_id, name, COUNT(threads.topic_id) AS number_threads "
                 . "FROM topics "
@@ -43,17 +46,28 @@ class Topic {
         
         return $topics;
     }
-    
+    /**
+     * Inserts new topic with given name into database
+     * @param string $name Name of the topic
+     */
     public static function newTopic($name) {
        Database::executeQueryReturnSingle("INSERT INTO topics VALUES (DEFAULT, ?)", array($name));
     }
-    
+    /**
+     * Renames topic with given id
+     * 
+     * @param integer $id topic id
+     * @param string $name new name
+     */
     public static function renameTopic($id, $name) {
         Database::executeQueryReturnSingle("UPDATE topics "
                 . "SET name=? "
                 . "WHERE topic_id=?", array($name, $id));
     }
-    
+    /**
+     * Deletes topic with given id as well as all the threads that belong to it. 
+     * @param integer $id topic id
+     */
     public static function deleteTopic($id) {
         $results = Database::executeQueryReturnALL("SELECT thread_id "
                 . "FROM threads WHERE threads.topic_id = ?", array($id));
