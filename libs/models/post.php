@@ -98,7 +98,8 @@ class Post {
     
     public static function loadPrivateMessages($user_id) {
         $results = Database::executeQueryReturnAll("SELECT posts.post_id, poster_id, user_name, text, posted_date, is_deleted, replies_to FROM posts, private_messages, users
-            WHERE posts.post_id = private_messages.post_id AND private_messages.receiver_id = ? AND users.user_id = posts.poster_id", array($user_id));
+            WHERE posts.post_id = private_messages.post_id AND private_messages.receiver_id = ? AND users.user_id = posts.poster_id
+            ORDER BY posts.posted_date DESC", array($user_id));
         
         foreach ($results as $row) {
            $posts[$row->post_id] = self::postLoadHelper($row);
