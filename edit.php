@@ -25,6 +25,11 @@
   }
   
   $post = Post::loadPost($postID);
+  
+  // redirect back to main page if post is deleted
+  if ($post->isDeleted()) {
+      redirect("index.php");
+  }
   // if user is neither moderator or owns this post, redirect to index page
   if (!getUser()->hasModeratorAccess() && getUser()->getID() != $post->getPosterID()) {
       redirect("index.php");
